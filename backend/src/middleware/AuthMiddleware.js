@@ -24,18 +24,16 @@ export const AuthMiddleware = expressAsyncHandler(async (req, res, next) => {
             }
             const user = await UserModel.findById(decoded.id)
                 .select("-password")
-                .populate("Organization.name", { name: 1, _id: 1 });
             if (!user) {
                 return res.status(401).json({ message: "Unauthorized, user not found" });
             }
             req.user = {
-                ...user._doc, Organization: user.Organization.map((org) => {
-                    return {
-                        _id: org.name._id,
-                        name: org.name.name,
-                        isTeacherVerified: org.isTeacherVerified
-                    }
-                })
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                UID: user.UID,
+                standard: user.standard
             };
             next();
         } catch (error) {
