@@ -15,11 +15,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+    res.send("Server is now Live");
+})
+
 // routes setup
 app.use('/api/auth', authRoutes);
 app.use('/api/assignment', assignmentRoutes);
 app.use('/api/batch', batchRoutes);
 app.use('/api/admin', adminRoutes);
+
+app.use((err, req, res, next) => {
+    console.error("Unhandled error: ", err);
+    res.status(500).json({ error: `Error in server : ${err.message}` || "Internal Server Error" })
+});
 
 const startServer = async () => {
     try {
