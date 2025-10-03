@@ -233,7 +233,7 @@ export const getAllBatchesForAdmin = expressAsyncHandler(async (req, res, next) 
                     _id: 1,
                     name: 1,
                     batchJoiningCode: 1,
-                    teacher: { name: "$teacherDetails.name" },
+                    teacher: { name: "$teacher.name" },
                 },
             }
         ]);
