@@ -4,7 +4,6 @@ const batchSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true
     },
     teacher: {
         type: mongoose.Schema.Types.ObjectId,

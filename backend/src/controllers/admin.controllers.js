@@ -45,15 +45,18 @@ export const getAllUsers = expressAsyncHandler(async (req, res, next) => {
                     UID: 1,
                     standard: 1,
                     isVerified: 1,
-                    totalUsers: { $sum: 1 },
                 },
             },
             {
                 $sort: { isVerified: 1 }
             }
         ]);
+        const totalUserCount = await UserModel.countDocuments();
+        const teacherCount = await UserModel.countDocuments({ role: "teacher" });
+        const studentCount = await UserModel.countDocuments({ role: "student" });
+        const verifiedCount = await UserModel.countDocuments({ isVerified: true });
 
-        return res.status(200).json({ students });
+        return res.status(200).json({ students, count: { totalUserCount, teacherCount, studentCount, verifiedCount } });
 
     } catch (error) {
         console.log("Error in getAllStudentList controller: " + error);
@@ -61,12 +64,12 @@ export const getAllUsers = expressAsyncHandler(async (req, res, next) => {
     }
 });
 
-// get student Information
+// get student Information by Id
 export const getStudentInfoByUserId = expressAsyncHandler(async (req, res, next) => {
     try {
-        const { userId } = req.params;
+        const { userId } = req.body;
         const user = await UserModel.findById(userId)
-            .select("-password");
+            .select("-password -updatedAt -__v");
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -74,7 +77,7 @@ export const getStudentInfoByUserId = expressAsyncHandler(async (req, res, next)
         // toDO:  get the user fee details and all
         const feeDetails = await FeeModel.aggregate([
             {
-                $match: { student: userId },
+                $match: { student: user._id },
             },
             {
                 $project: {
@@ -96,9 +99,42 @@ export const getStudentInfoByUserId = expressAsyncHandler(async (req, res, next)
     }
 });
 
+// get student Info By Searchig the User with the UID
+export const getStudentInfoByUID = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const { UIDNumber } = req.body;
+        const user = await UserModel.findOne({ UID: `STUD-${UIDNumber}`, role: "student" })
+            .select("-password -updatedAt -__v");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // toDO:  get the user fee details and all
+        const feeDetails = await FeeModel.aggregate([
+            {
+                $match: { student: user._id },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    amount: 1,
+                    paid: 1,
+                    transactionDetail: 1,
+                    mode: 1,
+                    paidAt: 1,
+                }
+            }
+        ]);
+        res.status(200).json({ user, feeDetails })
+    } catch (error) {
+        console.log("Error in getStudentInfoByUID controller: " + error);
+        next(error);
+    }
+});
+
 // delete the selected user
 export const deleteUser = expressAsyncHandler(async (req, res, next) => {
-    const { userId } = req.params;
+    const { userId } = req.body;
     try {
         const user = await UserModel.findById(userId);
         if (!user) {
@@ -122,15 +158,15 @@ export const deleteUser = expressAsyncHandler(async (req, res, next) => {
 export const createBatch = expressAsyncHandler(async (req, res, next) => {
     try {
         const user = req.user;
-        const { name, teacher } = req.body;
+        const { name, teacher, standard } = req.body;
 
-        if (!name || !teacher) {
+        if (!name || !teacher || !standard) {
             return res.status(400).json({ message: "Batch name and Teacher is required" });
         }
 
         // check if the batch name already exists
         const batch = await BatchModel.find({
-            teacher: teacher,
+            teacher,
             name
         });
 
@@ -140,8 +176,9 @@ export const createBatch = expressAsyncHandler(async (req, res, next) => {
         const batchJoiningCode = Math.floor(100000 + Math.random() * 900000);
         await BatchModel.create({
             name,
-            teacherId: user._id,
+            teacher: user._id,
             batchJoiningCode,
+            standard
         });
         return res.status(201).json({ message: "Batch created successfully" });
     } catch (error) {
@@ -155,7 +192,7 @@ export const getAllTeachers = expressAsyncHandler(async (req, res, next) => {
     try {
         const teachers = await UserModel.aggregate([
             {
-                $match: { role: "teacher" },
+                $match: { role: "teacher", isVerified: true },
             },
             {
                 $project: {
@@ -197,11 +234,11 @@ export const getAllBatchesForAdmin = expressAsyncHandler(async (req, res, next) 
                     name: 1,
                     batchJoiningCode: 1,
                     teacher: { name: "$teacherDetails.name" },
-                    totalBatches: { $sum: 1 },
                 },
             }
         ]);
-        return res.status(200).json({ batches });
+        const batchCount = await BatchModel.countDocuments();
+        return res.status(200).json({ batches, batchCount });
     } catch (error) {
         console.log("Error in getAllBatchesForAdmin controller: " + error);
         next(error);
@@ -211,7 +248,7 @@ export const getAllBatchesForAdmin = expressAsyncHandler(async (req, res, next) 
 // delete batch
 export const deleteBatch = expressAsyncHandler(async (req, res, next) => {
     try {
-        const { batchId } = req.params;
+        const { batchId } = req.body;
         const batch = await BatchModel.findByIdAndDelete(batchId);
         if (!batch) {
             return res.status(404).json({ message: "Batch not found" });
