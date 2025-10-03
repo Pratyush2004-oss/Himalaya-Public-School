@@ -103,6 +103,9 @@ export const getStudentInfoByUserId = expressAsyncHandler(async (req, res, next)
 export const getStudentInfoByUID = expressAsyncHandler(async (req, res, next) => {
     try {
         const { UIDNumber } = req.body;
+        if (!UIDNumber) {
+            return res.status(400).json({ message: "UID is required" });
+        };
         const user = await UserModel.findOne({ UID: `STUD-${UIDNumber}`, role: "student" })
             .select("-password -updatedAt -__v");
         if (!user) {
@@ -233,7 +236,7 @@ export const getAllBatchesForAdmin = expressAsyncHandler(async (req, res, next) 
                     _id: 1,
                     name: 1,
                     batchJoiningCode: 1,
-                    standard:1,
+                    standard: 1,
                     teacher: { name: "$teacher.name" },
                 },
             }
