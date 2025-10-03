@@ -10,6 +10,10 @@ const FeeSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
+    month:{
+        type: String,
+        required: true
+    },
     transactionDetail: {
         order_id: {
             type: String,

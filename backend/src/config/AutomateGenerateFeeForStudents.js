@@ -29,12 +29,19 @@ const AutomateGenerateFeeForStudents = async () => {
     for (const student of students) {
         // get the fee for the student as per the standard
         const fee = FeeMappingUsingStandard[student.standard];
+        const feeDetail = await FeeModel.findOne({ student: student._id, month: new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }) });
+
+        if (feeDetail) {
+            continue;
+        }
         // Generate fee for the student only on the first day of the month
         await FeeModel.create({
             amount: fee,
             student: student._id,
+            month: new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }),
         })
     }
+    console.log("Fee generated for students");
 };
 
 export default AutomateGenerateFeeForStudents
