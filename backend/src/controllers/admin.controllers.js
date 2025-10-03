@@ -103,6 +103,7 @@ export const getStudentInfoByUserId = expressAsyncHandler(async (req, res, next)
 export const getStudentInfoByUID = expressAsyncHandler(async (req, res, next) => {
     try {
         const { UIDNumber } = req.body;
+        console.log(`UIDNumber: STUD-${UIDNumber}`);
         if (!UIDNumber) {
             return res.status(400).json({ message: "UID is required" });
         };
