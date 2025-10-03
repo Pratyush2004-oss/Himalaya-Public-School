@@ -31,7 +31,22 @@ export const assignmentApis = {};
 
 export const feeApis = {};
 
-export const adminApis = {};
+export const adminApis = {
+  // user apis
+  getAllUsers: `${BASE_URL}/admin/get-all-the-users`,
+  verifyUser: `${BASE_URL}/admin/verify-users`,
+  getStudentInformation: `${BASE_URL}/admin/get-student-information`,
+  getStudentInfoByUID: `${BASE_URL}/admin/get-student-by-UID`,
+  deleteUser: `${BASE_URL}/admin/delete-user/:userId`,
+
+  // batch apis
+  getAllTeachers: `${BASE_URL}/admin/get-all-teachers`,
+  getAllBatchesForAdmin: `${BASE_URL}/admin/get-all-batches-for-admin`,
+  createBatch: `${BASE_URL}/admin/create-batch`,
+  deleteBatch: `${BASE_URL}/admin/delete-batch/:batchId`,
+  // fee apis
+  verifyFeePayment: `${BASE_URL}/admin/verify-fee-payment`,
+};
 
 export const StandardsList = [
   {

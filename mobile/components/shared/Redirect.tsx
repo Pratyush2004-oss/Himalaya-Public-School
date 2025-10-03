@@ -6,7 +6,8 @@ import { useUserStore } from "@/store/auth.store";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const segment = useSegments();
-  const { user, isCheckingAuth, isAuthenticated, checkAuth, isAdmin } = useUserStore();
+  const { user, isCheckingAuth, isAuthenticated, checkAuth, isAdmin } =
+    useUserStore();
 
   useEffect(() => {
     if (isCheckingAuth && !isAuthenticated) {
@@ -17,7 +18,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthScreen = segment[0] === "(auth)";
   const isStudentScreen = segment[0] === "students";
   const isTeacherScreen = segment[0] === "teachers";
-  const isAdminScreen = segment[0] === "admin";
+  const isAdminScreen = segment[0] === "(adminTabs)";
 
   if (isCheckingAuth) {
     return <LoadingScreen />;

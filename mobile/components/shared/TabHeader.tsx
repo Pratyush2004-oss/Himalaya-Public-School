@@ -29,7 +29,7 @@ const TabHeader = () => {
           {isAdmin && (
             <TouchableOpacity
               className="p-2 rounded-full bg-gray-300/50"
-              onPress={() => router.push("/admin")}
+              onPress={() => router.push("/(adminTabs)")}
             >
               <Feather name="grid" size={24} color="rgb(31 41 55)" />
             </TouchableOpacity>
