@@ -134,7 +134,7 @@ export const getStudentInfoByUID = expressAsyncHandler(async (req, res, next) =>
 
 // delete the selected user
 export const deleteUser = expressAsyncHandler(async (req, res, next) => {
-    const { userId } = req.body;
+    const { userId } = req.params;
     try {
         const user = await UserModel.findById(userId);
         if (!user) {
@@ -248,7 +248,7 @@ export const getAllBatchesForAdmin = expressAsyncHandler(async (req, res, next) 
 // delete batch
 export const deleteBatch = expressAsyncHandler(async (req, res, next) => {
     try {
-        const { batchId } = req.body;
+        const { batchId } = req.params;
         const batch = await BatchModel.findByIdAndDelete(batchId);
         if (!batch) {
             return res.status(404).json({ message: "Batch not found" });
