@@ -5,7 +5,7 @@ const router = express.Router();
 
 // routes accessed by teacher
 router.post('/add-students-to-batch', AuthMiddleware, VerifyTeacher, addStudentsByTeacher);
-router.get('/change-batchJoinig-code', AuthMiddleware, VerifyTeacher, changeBatchJoiningCode);
+router.get('/change-batch-Joining-code', AuthMiddleware, VerifyTeacher, changeBatchJoiningCode);
 router.get('/get-all-batches-for-teacher', AuthMiddleware, VerifyTeacher, getAllBatchesForTeacher);
 router.get('/get-batch-by-id-for-teacher/:batchId', AuthMiddleware, VerifyTeacher, getBatchByIdForTeacher);
 router.get('/get-all-students/:batchId', AuthMiddleware, VerifyTeacher, getAllStudents);
