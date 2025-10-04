@@ -294,14 +294,16 @@ export const useAdminStore = create<AdminStoreInterface>((set, get) => ({
   resetAdminData: () => {
     set({
       isLoading: false,
-      users: [],
+      // user state
       count: {
         studentCount: 0,
         teacherCount: 0,
         totalUserCount: 0,
         verifiedCount: 0,
       },
+      users: [],
       selectedStudent: null,
+      //   batch state
       allTeachers: [],
       allBatches: [],
     });

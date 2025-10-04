@@ -1,23 +1,19 @@
+import useUserHook from "@/hooks/userHook";
 import { useUserStore } from "@/store/auth.store";
-import { UserType } from "@/types";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
-/*
-  Hello! Here is the native version of the Profile screen you requested.
-
-  - I've used React Native components and applied styling with Nativewind.
-  - The sections animate into view using 'react-native-reanimated'.
-  - Icons are from 'react-native-vector-icons', so please ensure the library is correctly linked in your project.
-  - The UI maintains the clean, professional look from our previous design.
-*/
-
-// Dummy user data to populate the screen
-
 const ProfileScreen = () => {
   const { user } = useUserStore();
+  const router = useRouter();
+  const { logoutHook } = useUserHook();
+  const handleLogout = () => {
+    logoutHook();
+    router.replace("/(auth)");
+  };
   return (
     <ScrollView
       contentContainerStyle={{ paddingBottom: 20 }}
@@ -138,7 +134,10 @@ const ProfileScreen = () => {
               </Text>
               <Feather name="chevron-right" size={20} color="#9ca3af" />
             </TouchableOpacity>
-            <TouchableOpacity className="w-full p-4 active:bg-gray-100">
+            <TouchableOpacity
+              className="w-full p-4 active:bg-gray-100"
+              onPress={handleLogout}
+            >
               <Text className="text-red-500 font-outfit-medium">Logout</Text>
             </TouchableOpacity>
           </View>

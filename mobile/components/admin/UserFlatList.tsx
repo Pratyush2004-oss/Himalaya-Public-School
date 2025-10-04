@@ -5,7 +5,9 @@ import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
   FlatList,
+  Pressable,
   RefreshControl,
   Text,
   TextInput,
@@ -23,7 +25,8 @@ const UserItem: React.FC<{
   item: AllUsersType;
   index: number;
   onPress?: (user: AllUsersType) => void;
-}> = ({ item, index, onPress }) => {
+  onVerify: (userId: string) => void;
+}> = ({ item, index, onPress, onVerify }) => {
   const getStatusColor = (isVerified: boolean) => {
     return isVerified ? "bg-emerald-100" : "bg-orange-100";
   };
@@ -79,7 +82,10 @@ const UserItem: React.FC<{
               <Text className="text-base text-gray-800 font-outfit-semibold">
                 {item.name}
               </Text>
-              <View
+              <Pressable
+                onLongPress={() => {
+                  if (!item.isVerified) onVerify(item._id);
+                }}
                 className={`px-3 py-1 rounded-full ${getStatusColor(item.isVerified)} flex-row items-center`}
               >
                 {getStatusIcon(item.isVerified)}
@@ -90,7 +96,7 @@ const UserItem: React.FC<{
                 >
                   {getStatusText(item.isVerified)}
                 </Text>
-              </View>
+              </Pressable>
             </View>
 
             <View className="flex-row items-center mt-2">
@@ -234,7 +240,7 @@ const ListHeader = ({
 
 // Main Component
 const UserFlatList: React.FC = () => {
-  const { users, count, getUserById } = useAdminStore();
+  const { users, count, getUserById, verifyUser } = useAdminStore();
   const { token } = useUserStore();
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -250,11 +256,30 @@ const UserFlatList: React.FC = () => {
     return users;
   };
 
-  // Handle user long press
+  // Handle user press
   const handleUserPress = async (user: AllUsersType) => {
     await getUserById(user._id, token!).then((res) => {
       if (res) router.push("/(adminTabs)/fee");
     });
+  };
+
+  // handle verify user press
+  const handleVerifyUser = async (userId: string) => {
+    Alert.alert("Verify User", "Are you sure you want to verify this user?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Verify",
+        onPress: async () => {
+          try {
+            // Call API to verify user
+            await verifyUser(userId, token!);
+          } catch (error) {}
+        },
+      },
+    ]);
   };
 
   const renderItem = ({
@@ -263,7 +288,14 @@ const UserFlatList: React.FC = () => {
   }: {
     item: AllUsersType;
     index: number;
-  }) => <UserItem item={item} index={index} onPress={handleUserPress} />;
+  }) => (
+    <UserItem
+      item={item}
+      index={index}
+      onPress={handleUserPress}
+      onVerify={handleVerifyUser}
+    />
+  );
 
   const keyExtractor = (item: AllUsersType) => item._id;
 

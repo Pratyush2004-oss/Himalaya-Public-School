@@ -6,7 +6,7 @@ import { View } from "react-native";
 const FeeScreen = () => {
   return (
     <View className="flex-1">
-      <SearchBox  />
+      <SearchBox />
       <StudentFeeDetails />
     </View>
   );

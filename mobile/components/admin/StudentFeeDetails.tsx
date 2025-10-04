@@ -2,31 +2,31 @@ import { useAdminStore } from "@/store/admin.store";
 import { useUserStore } from "@/store/auth.store";
 import { AllUsersType, FeeType } from "@/types";
 import {
-    Feather,
-    Ionicons,
-    MaterialCommunityIcons,
-    MaterialIcons,
+  Feather,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    RefreshControl,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  RefreshControl,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Animated, {
-    FadeInDown,
-    FadeInRight,
-    FadeInUp,
-    Layout,
-    SlideInLeft,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring
+  FadeInDown,
+  FadeInRight,
+  FadeInUp,
+  Layout,
+  SlideInLeft,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
 
 // Fee Item Component
@@ -259,7 +259,7 @@ const StudentInfoCard: React.FC<{ user: AllUsersType }> = ({ user }) => {
             <View className="flex-row items-center mb-2">
               <MaterialCommunityIcons name="school" size={16} color="white" />
               <Text className="ml-2 text-sm font-outfit-bold text-white/90">
-                Class {user.standard}
+                Class: {user.standard ? user.standard : "N/A"}
               </Text>
             </View>
             <View className="flex-row items-center">
@@ -435,7 +435,9 @@ const StudentFeeDetails: React.FC = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     // Refresh student data
-    await getUserById(selectedStudent!.user._id, token!);
+    if (selectedStudent && selectedStudent.user && selectedStudent.user._id)
+      await getUserById(selectedStudent.user._id, token!);
+    setRefreshing(false);
   };
 
   if (!selectedStudent) {

@@ -26,6 +26,61 @@ export type ChangePasswordInputType = {
 };
 
 // BATCH TYPE
+export type BatchForTeacherType = {
+  _id: string;
+  name: string;
+  standard: string;
+  batchJoiningCode: string | null;
+  studentCount: number;
+};
+
+export type StudentType = {
+  _id: string;
+  name: string;
+  email: string;
+  UID: string;
+  standard: string;
+};
+
+export type BatchForStudentType = {
+  _id: string;
+  name: string;
+  standard: string;
+  teacher: {
+    name: string;
+  };
+  studentCount: number;
+};
+
+export type Add_To_BatchInputType = {
+  batchId: string;
+  studentIds: string[];
+};
+
+export type JoinBatchInputType = {
+  batchId: string;
+  batchJoiningCode: string;
+};
+
+export type removeStudentFromBatchInputType = {
+  batchId: string;
+  studentId: string;
+};
+
+export type BatchdetailType = {
+  _id: string;
+  students: StudentType[];
+};
+
+export type AllBatchesForStudentsType = {
+  _id: string;
+  name: string;
+  standard: string;
+  teacher: {
+    name: string;
+  };
+  studentCount: number;
+};
 
 // admin Types
 export type AllUsersType = {
@@ -48,7 +103,6 @@ export type SelectedUserType = {
   feeDetails: FeeType[];
 };
 
-// batches
 export type AllTeachersType = {
   _id: string;
   name: string;
