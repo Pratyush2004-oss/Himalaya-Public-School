@@ -1,6 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
 import BatchModel from "../models/batch.model.js";
 import UserModel from "../models/auth.model.js";
+import mongoose from "mongoose";
 
 // controllers that only teacher can access
 
@@ -183,7 +184,7 @@ export const getAllBatchesForTeacher = expressAsyncHandler(async (req, res, next
             // 1. $match: Find batches where teacherId matches and Organization is in user's organizations
             {
                 $match: {
-                    teacherId: new mongoose.Types.ObjectId(user._id),
+                    teacher: new mongoose.Types.ObjectId(user._id),
                 }
             },
             // 2. $project: Format output and add studentCount
@@ -371,9 +372,6 @@ export const getAllBatchesForStudentToJoin = expressAsyncHandler(async (req, res
                     name: 1,
                     standard: 1,
                     teacher: { name: "$teacherDetails.name" },
-                    isStudent: {
-                        $in: [new mongoose.Types.ObjectId(user._id), "$students"]
-                    }
                 }
             }
         ]);

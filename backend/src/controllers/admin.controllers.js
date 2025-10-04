@@ -282,7 +282,9 @@ export const verifyFeePayment = expressAsyncHandler(async (req, res, next) => {
             return res.status(404).json({ message: "Fee not found" });
         }
 
+        return res.status(200).json({ message: "Fee verified successfully" });
     } catch (error) {
-
+        console.log("Error in verifyFeePayment controller: " + error);
+        next(error);
     }
 })
