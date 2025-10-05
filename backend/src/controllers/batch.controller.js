@@ -2,6 +2,7 @@ import expressAsyncHandler from "express-async-handler";
 import BatchModel from "../models/batch.model.js";
 import UserModel from "../models/auth.model.js";
 import mongoose from "mongoose";
+import AssignmentModel from "../models/assignment.model.js";
 
 // controllers that only teacher can access
 
@@ -282,6 +283,19 @@ export const deleteBatch = expressAsyncHandler(async (req, res, next) => {
             return res.status(403).json({ message: "You are not authorized to delete this batch" });
         }
 
+        // delete all the related assignments of that batch
+        const assignments = await AssignmentModel.find({ batch: batchId });
+        for (const assignment of assignments) {
+            // if the assignment has multiple batchids in the array then pop the deleted batchId
+            if (assignment.batchIds.includes(batchId)) {
+                assignment.batchIds.pull(batchId);
+            }
+            // if the batchIds have only one batchId then delete the assignment
+            if (assignment.batchIds.length === 1) {
+                await assignment.deleteOne();
+            }
+            await assignment.save();
+        }
         // delete the batch
         await batch.deleteOne();
 

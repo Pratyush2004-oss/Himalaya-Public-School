@@ -3,6 +3,7 @@ import BatchModel from "../models/batch.model.js";
 import UserModel from "../models/auth.model.js";
 import mongoose from "mongoose";
 import FeeModel from "../models/fee.model.js";
+import AssignmentModel from "../models/assignment.model.js";
 
 // Controllers that admin can access
 
@@ -255,10 +256,25 @@ export const getAllBatchesForAdmin = expressAsyncHandler(async (req, res, next) 
 export const deleteBatch = expressAsyncHandler(async (req, res, next) => {
     try {
         const { batchId } = req.params;
-        const batch = await BatchModel.findByIdAndDelete(batchId);
+        const batch = await BatchModel.findOne(batchId);
         if (!batch) {
             return res.status(404).json({ message: "Batch not found" });
         }
+        // delete the assignments of the selected batch
+        const assignments = await AssignmentModel.find({ batch: batchId });
+        for (const assignment of assignments) {
+            // if the assignment has multiple batchids in the array then pop the deleted batchId
+            if (assignment.batchIds.includes(batchId)) {
+                assignment.batchIds.pull(batchId);
+            }
+            // if the batchIds have only one batchId then delete the assignment
+            if (assignment.batchIds.length === 1) {
+                await assignment.deleteOne();
+            }
+            await assignment.save();
+        }
+
+        await batch.deleteOne();
         return res.status(200).json({ message: "Batch deleted successfully" });
     } catch (error) {
         console.log("Error in deleteBatch controller: " + error);
