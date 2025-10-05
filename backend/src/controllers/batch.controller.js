@@ -193,6 +193,7 @@ export const getAllBatchesForTeacher = expressAsyncHandler(async (req, res, next
                 $project: {
                     _id: 1,
                     name: 1,
+                    standard:1,
                     batchJoiningCode: 1,
                     studentCount: { $size: "$students" }
                 }
