@@ -9,7 +9,7 @@ router.get('/change-batch-Joining-code/:batchId', AuthMiddleware, VerifyTeacher,
 router.get('/get-all-batches-for-teacher', AuthMiddleware, VerifyTeacher, getAllBatchesForTeacher);
 router.get('/get-batch-by-id-for-teacher/:batchId', AuthMiddleware, VerifyTeacher, getBatchByIdForTeacher);
 router.get('/get-all-students/:batchId', AuthMiddleware, VerifyTeacher, getAllStudents);
-router.delete('/delete-student-from-batch', AuthMiddleware, VerifyTeacher, deleteStudentFromBatch);
+router.put('/delete-student-from-batch', AuthMiddleware, VerifyTeacher, deleteStudentFromBatch);
 router.delete('/delete-batch/:batchId', AuthMiddleware, VerifyTeacher, deleteBatch);
 // routes accessed by students
 router.get('/get-all-batches-for-student-to-join', AuthMiddleware, VerifyStudent, getAllBatchesForStudentToJoin);
