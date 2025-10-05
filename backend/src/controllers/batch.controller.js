@@ -62,7 +62,7 @@ export const changeBatchJoiningCode = expressAsyncHandler(async (req, res, next)
         }
 
         // check if the current user is the teacher of that batch or not
-        if(batch.teacher.toString() !== user._id.toString()) {
+        if (batch.teacher.toString() !== user._id.toString()) {
             return res.status(403).json({ message: "You are not authorized to change the batch joining code" });
         }
 
@@ -312,7 +312,7 @@ export const getAllBatchesForStudent = expressAsyncHandler(async (req, res, next
             {
                 $lookup: {
                     from: "users",
-                    localField: "teacherId",
+                    localField: "teacher",
                     foreignField: "_id",
                     as: "teacherDetails"
                 }
@@ -346,7 +346,7 @@ export const getAllBatchesForStudentToJoin = expressAsyncHandler(async (req, res
 
         // Aggregation pipeline:
         const batches = await BatchModel.aggregate([
-            // 1. $match: Find batches where Organization is in user's organizations and user is a student
+            // 1. $match: Find batches where the user is not in the students array
             {
                 $match: {
                     standard: user.standard,
@@ -357,7 +357,7 @@ export const getAllBatchesForStudentToJoin = expressAsyncHandler(async (req, res
             {
                 $lookup: {
                     from: "users",
-                    localField: "teacherId",
+                    localField: "teacher",
                     foreignField: "_id",
                     as: "teacherDetails"
                 }
