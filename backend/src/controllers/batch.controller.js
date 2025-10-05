@@ -49,7 +49,7 @@ export const getAllStudents = expressAsyncHandler(async (req, res, next) => {
 export const changeBatchJoiningCode = expressAsyncHandler(async (req, res, next) => {
     try {
         const user = req.user;
-        const { batchId } = req.body;
+        const { batchId } = req.params;
 
         if (!batchId) {
             return res.status(400).json({ message: "Batch ID is required" });
