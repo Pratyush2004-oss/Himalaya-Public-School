@@ -13,7 +13,7 @@ export const UserApis = {
 export const batchApis = {
   // teacher apis
   add_students_to_batch: `${BASE_URL}/batch/add-students-to-batch`,
-  changeBatchJoiningCode: `${BASE_URL}/batch/change-batch-Joining-code`,
+  changeBatchJoiningCode: `${BASE_URL}/batch/change-batch-Joining-code/:batchId`,
   get_Batches_for_Teacher: `${BASE_URL}/batch/get-all-batches-for-teacher`,
   get_Single_Batch_for_Teacher: `${BASE_URL}/batch/get-batch-By-id-for-teacher/:batchId`,
   getAllStudentList: `${BASE_URL}/batch/get-all-students/:batchId`,

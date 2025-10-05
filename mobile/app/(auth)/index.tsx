@@ -138,6 +138,7 @@ export default function AuthScreen() {
                       Email
                     </Text>
                     <TextInput
+                      autoCapitalize="none"
                       placeholderTextColor="#9CA3AF"
                       keyboardType="email-address"
                       value={input.email}

@@ -1,19 +1,21 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { useUserStore } from "@/store/auth.store";
 import StudentBatchFlatList from "@/components/students/StudentBatchFlatList";
 import TeacherBatchList from "@/components/teachers/TeacherBatchList";
+import { useUserStore } from "@/store/auth.store";
+import React from "react";
+import { View } from "react-native";
 
 const batches = () => {
   const { user } = useUserStore();
   return (
-    <View className="flex-1">
-      {user?.role === "student" ? (
-        <StudentBatchFlatList />
-      ) : (
-        <TeacherBatchList />
-      )}
-    </View>
+    user && (
+      <View className="flex-1">
+        {user?.role === "student" ? (
+          <StudentBatchFlatList />
+        ) : (
+          <TeacherBatchList />
+        )}
+      </View>
+    )
   );
 };
 

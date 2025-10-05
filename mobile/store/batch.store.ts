@@ -225,7 +225,11 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
           },
         },
       ]);
-    } catch (error) {}
+    } catch (error: any) {
+      console.log(error);
+      if (error.isAxiosError) Alert.alert("Error", error.response.data.message);
+      else Alert.alert("Error", error.message);
+    }
   },
   //   remove student from batch
   removeStudentFromBatch: async (input, token) => {

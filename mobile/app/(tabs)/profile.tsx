@@ -12,7 +12,6 @@ const ProfileScreen = () => {
   const { logoutHook } = useUserHook();
   const handleLogout = () => {
     logoutHook();
-    router.replace("/(auth)");
   };
   return (
     <ScrollView
