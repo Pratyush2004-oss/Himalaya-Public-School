@@ -1,12 +1,22 @@
 import TabHeader from "@/components/shared/TabHeader";
+import { useUserStore } from "@/store/auth.store";
+import { useBatchStore } from "@/store/batch.store";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TabLayout = () => {
   const insets = useSafeAreaInsets();
+  const { token, user } = useUserStore();
+  const { getBatchListForTeacher } = useBatchStore();
+  // Load batches on component mount
+  useEffect(() => {
+    if (token && user?.role === "teacher") {
+      getBatchListForTeacher(token);
+    }
+  }, [token]);
   return (
     <View className="flex-1">
       <TabHeader />

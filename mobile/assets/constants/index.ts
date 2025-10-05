@@ -1,4 +1,5 @@
 export const BASE_URL = "https://himalaya-public-school.vercel.app/api";
+export const RAZORPAY_KEY_ID = "rzp_test_nNCur574VZoFK2";
 
 // user apis
 export const UserApis = {
@@ -22,14 +23,22 @@ export const batchApis = {
 
   // student apis
   add_to_batch: `${BASE_URL}/batch/join-batch-by-code`,
-  get_batches_for_Student: `${BASE_URL}/batch/get-all-batches-for-student`,
+  get_batches_for_Student: `${BASE_URL}/batch/get-all-batches-for-students`,
   get_All_Batches_to_Join: `${BASE_URL}/batch/get-all-batches-for-student-to-join`,
   leaveBatch: `${BASE_URL}/batch/leave-batch`,
 };
 
-export const assignmentApis = {};
+export const AssignmentApis = {
+  createAssignment: `${BASE_URL}/assignment/create-assignment`,
+  getTodayAssignment: `${BASE_URL}/assignment/get-assignments-of-today`,
+  getBatchAssignment: `${BASE_URL}/assignment/get-assignment/:batchId`,
+};
 
-export const feeApis = {};
+export const feeApis = {
+  getAllFees: `${BASE_URL}/fee/get-all-fee-list`,
+  orderFee: `${BASE_URL}/fee/create-order`,
+  verifyFeePayment: `${BASE_URL}/fee/verify-fee-payment`,
+};
 
 export const adminApis = {
   // user apis

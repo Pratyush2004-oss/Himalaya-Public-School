@@ -14,6 +14,9 @@ import {
 } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import StudentBatchItem from "./StudentBatchItem";
+import { useAssignmentStore } from "@/store/assignment.store";
+import { useRoute } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 
 // Empty State Component
 const EmptyState = () => (
@@ -49,6 +52,10 @@ const ListHeader = ({
 }) => {
   // Calculate batch statistics for my batches
   const getStandardStats = () => {
+    if (!batches || batches.length === 0) {
+      return [];
+    }
+
     const standardGroups = batches.reduce(
       (acc, batch) => {
         const standard = batch.standard;
@@ -64,11 +71,10 @@ const ListHeader = ({
   };
 
   const standardStats = getStandardStats();
-  const totalBatches = batches.length;
-  const totalStudents = batches.reduce(
-    (sum, batch) => sum + batch.studentCount,
-    0
-  );
+  const totalBatches = batches ? batches.length : 0;
+  const totalStudents = batches
+    ? batches.reduce((sum, batch) => sum + batch.studentCount, 0)
+    : 0;
 
   const statsData = [
     {
@@ -89,12 +95,6 @@ const ListHeader = ({
       icon: "school-outline",
       color: "bg-pink-400",
     },
-    {
-      count: batches.filter((b) => parseInt(b.standard) >= 9).length,
-      name: "Senior Classes",
-      icon: "trophy-outline",
-      color: "bg-emerald-400",
-    },
   ];
 
   return (
@@ -103,7 +103,7 @@ const ListHeader = ({
       className="mb-4"
     >
       {/* Stats Cards - Only show for my batches */}
-      {batches.length > 0 && (
+      {batches && batches.length > 0 && (
         <>
           <FlatList
             data={statsData}
@@ -122,39 +122,13 @@ const ListHeader = ({
                   </Text>
                 </View>
                 <View
-                  className={`items-center justify-center w-12 h-12 ${item.color} rounded-2xl`}
+                  className={`items-center justify-center w-12 h-12 ${item.color} rounded-2xl ml-2`}
                 >
                   <Ionicons name={item.icon as any} size={24} color="white" />
                 </View>
               </View>
             )}
           />
-
-          {/* Standard Distribution */}
-          {standardStats.length > 0 && (
-            <View className="p-4 mt-3 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl">
-              <Text className="mb-3 text-base text-indigo-800 font-outfit-semibold">
-                Class Distribution
-              </Text>
-              <View className="flex-row flex-wrap">
-                {standardStats.map(([standard, count]) => (
-                  <View
-                    key={standard}
-                    className="flex-row items-center px-3 py-2 mb-2 mr-2 bg-white/70 rounded-xl"
-                  >
-                    <MaterialCommunityIcons
-                      name="school"
-                      size={16}
-                      color="#6366f1"
-                    />
-                    <Text className="ml-2 text-sm text-indigo-700 font-outfit-medium">
-                      Class {standard}: {count}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
 
           {/* Divider */}
           <View className="h-0.5 my-4 bg-gray-200" />
@@ -183,7 +157,9 @@ const ListHeader = ({
 
 const StudentBatchList = () => {
   const [search, setSearch] = useState("");
+  const router = useRouter();
   const { token } = useUserStore();
+  const { setSelectedBatch } = useAssignmentStore();
   const {
     getBatchListForStudent,
     batchListForStudents,
@@ -210,8 +186,9 @@ const StudentBatchList = () => {
 
   // Handle batch press
   const handleMyBatchPress = async (batch: BatchForStudentType) => {
-    // Navigate to batch details or implement specific functionality
-    console.log("Pressed batch:", batch.name);
+    setSelectedBatch(batch._id);
+    // Navigate to batch assignment screen
+    router.push("/students/batchAssignments");
   };
 
   // Handle leave batch
@@ -256,26 +233,28 @@ const StudentBatchList = () => {
     />
   );
   return (
-    <FlatList
-      data={filteredMyBatches()}
-      renderItem={renderMyBatchItem}
-      keyExtractor={(item) => item._id}
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingBottom: 20 }}
-      ListHeaderComponent={
-        <ListHeader
-          batches={batchListForStudents}
-          search={search}
-          setSearch={setSearch}
-        />
-      }
-      ListEmptyComponent={<EmptyState />}
-      removeClippedSubviews={true}
-      // Pull to refresh functionality
-      refreshControl={
-        <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
-      }
-    />
+    <View className="flex-1 px-5">
+      <FlatList
+        data={filteredMyBatches()}
+        renderItem={renderMyBatchItem}
+        keyExtractor={(item) => item._id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 20 }}
+        ListHeaderComponent={
+          <ListHeader
+            batches={filteredMyBatches()}
+            search={search}
+            setSearch={setSearch}
+          />
+        }
+        ListEmptyComponent={<EmptyState />}
+        removeClippedSubviews={true}
+        // Pull to refresh functionality
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={handleRefresh} />
+        }
+      />
+    </View>
   );
 };
 

@@ -1,3 +1,5 @@
+import { DocumentPickerAsset } from "expo-document-picker";
+
 export type UserType = {
   name: string;
   email: string;
@@ -130,13 +132,32 @@ export type CreateBatchInputType = {
 export type FeeType = {
   _id: string;
   amount: number;
-  student: string;
   month: string;
   transactionDetail: {
     order_id: string;
     payment_id: string;
   };
-  mode: string;
+  student: string | null | undefined;
+  mode: "online" | "offline";
   paid: boolean;
   paidAt: Date;
+  createdAt: Date;
 };
+
+export type BatchAssignmentType = {
+  _id: string;
+  homework: string[];
+  createdAt: string;
+};
+
+export type TodaysAssignmentType = {
+  _id: string;
+  homework: string[];
+  batchName: string;
+};
+
+export type CreateAssignmentInputType = {
+  batchIds: string[];
+  files: (File | DocumentPickerAsset)[];
+};
+

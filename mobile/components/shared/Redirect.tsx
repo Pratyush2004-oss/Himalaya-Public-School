@@ -6,14 +6,14 @@ import { useUserStore } from "@/store/auth.store";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const segment = useSegments();
-  const { user, isCheckingAuth, isAuthenticated, checkAuth, isAdmin } =
+  const { user, isCheckingAuth, isAuthenticated, checkAuth, isAdmin, token } =
     useUserStore();
 
   useEffect(() => {
-    if (isCheckingAuth && !isAuthenticated) {
+    if (!user && isCheckingAuth && !isAuthenticated) {
       checkAuth();
     }
-  }, [isCheckingAuth, isAuthenticated, checkAuth]);
+  }, [isCheckingAuth, isAuthenticated, checkAuth, user]);
 
   const isAuthScreen = segment[0] === "(auth)";
   const isStudentScreen = segment[0] === "students";

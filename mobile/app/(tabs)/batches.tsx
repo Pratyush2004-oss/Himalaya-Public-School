@@ -7,15 +7,13 @@ import { View } from "react-native";
 const batches = () => {
   const { user } = useUserStore();
   return (
-    user && (
-      <View className="flex-1">
-        {user?.role === "student" ? (
-          <StudentBatchFlatList />
-        ) : (
-          <TeacherBatchList />
-        )}
-      </View>
-    )
+    <View className="flex-1">
+      {user?.role === "student" ? (
+        <StudentBatchFlatList />
+      ) : (
+        <TeacherBatchList />
+      )}
+    </View>
   );
 };
 

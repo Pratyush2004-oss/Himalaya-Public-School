@@ -1,15 +1,15 @@
 import { useUserStore } from "@/store/auth.store";
 import { useBatchStore } from "@/store/batch.store";
-import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import React, { useEffect } from "react";
+import { View } from "react-native";
 import AvailableBatchList from "./AvailableBatchList";
 import StudentBatchList from "./StudentBatchList";
 
+const Tab = createMaterialTopTabNavigator();
+
 // Main Component
 const StudentBatchFlatList: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"my-batches" | "available">(
-    "my-batches"
-  );
   const { token } = useUserStore();
   const { getAllBatches, getBatchListForStudent } = useBatchStore();
 
@@ -20,47 +20,37 @@ const StudentBatchFlatList: React.FC = () => {
       getAllBatches(token);
     }
   }, [token]);
-  return (
-    <View className="flex-1 px-5 pt-4">
-      <View className="flex-row p-1 mb-4 bg-gray-100 rounded-2xl">
-        <TouchableOpacity
-          onPress={() => setActiveTab("my-batches")}
-          className={`flex-1 py-3 rounded-xl items-center ${
-            activeTab === "my-batches" ? "bg-white shadow-sm" : ""
-          }`}
-        >
-          <Text
-            className={`font-outfit-semibold ${
-              activeTab === "my-batches" ? "text-teal-600" : "text-gray-500"
-            }`}
-          >
-            My Batches
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setActiveTab("available")}
-          className={`flex-1 py-3 rounded-xl items-center ${
-            activeTab === "available" ? "bg-white shadow-sm" : ""
-          }`}
-        >
-          <Text
-            className={`font-outfit-semibold ${
-              activeTab === "available" ? "text-teal-600" : "text-gray-500"
-            }`}
-          >
-            Available Batches
-          </Text>
-        </TouchableOpacity>
-      </View>
 
-      {
-        // Conditional Rendering
-        activeTab === "my-batches" ? (
-          <StudentBatchList />
-        ) : (
-          <AvailableBatchList />
-        )
-      }
+  return (
+    <View className="flex-1 pt-4">
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: "#0d9488", // teal-600
+          tabBarInactiveTintColor: "#6b7280", // gray-500
+          tabBarLabelStyle: {
+            fontFamily: "Outfit-SemiBold",
+            fontSize: 14,
+            textTransform: "capitalize",
+          },
+          tabBarIndicatorStyle: {
+            backgroundColor: "#0d9488", // teal-600
+            height: 3,
+            borderRadius: 3,
+          },
+          tabBarStyle: {
+            backgroundColor: "transparent",
+            elevation: 0, // Remove shadow on Android
+            shadowOpacity: 0, // Remove shadow on iOS
+            marginBottom: 16,
+            marginHorizontal: 20,
+          },
+          // This ensures the swipe gesture doesn't interfere with horizontal FlatLists
+          swipeEnabled: true, 
+        }}
+      >
+        <Tab.Screen name="My Batches" component={StudentBatchList} />
+        <Tab.Screen name="Available" component={AvailableBatchList} />
+      </Tab.Navigator>
     </View>
   );
 };

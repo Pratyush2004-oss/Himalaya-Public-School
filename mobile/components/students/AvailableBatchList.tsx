@@ -34,6 +34,7 @@ const EmptyState = () => (
 );
 
 // Header Component with Stats and Search
+
 const ListHeader = ({
   search,
   setSearch,
@@ -129,7 +130,7 @@ const AvailableBatchList = () => {
     <AvailableBatchItem item={item} index={index} onJoin={handleJoinBatch} />
   );
   return (
-    <>
+    <View className="flex-1 px-5">
       <FlatList
         data={filteredAvailableBatches()}
         renderItem={renderAvailableBatchItem}
@@ -157,7 +158,7 @@ const AvailableBatchList = () => {
         }}
         onJoin={handleConfirmJoin}
       />
-    </>
+    </View>
   );
 };
 

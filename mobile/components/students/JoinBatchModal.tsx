@@ -71,11 +71,11 @@ const JoinBatchModal: React.FC<{
               placeholder="Enter batch joining code"
               className="p-4 text-gray-800 bg-gray-50 rounded-xl font-outfit"
               placeholderTextColor="#9ca3af"
-              autoCapitalize="characters"
+              keyboardType="numeric"
             />
           </View>
 
-          <View className="flex-row space-x-3">
+          <View className="flex-row gap-3">
             <TouchableOpacity
               onPress={onClose}
               className="items-center flex-1 p-4 bg-gray-100 rounded-xl"

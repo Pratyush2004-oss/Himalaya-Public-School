@@ -21,7 +21,7 @@ interface UserStoreInterface {
   login: (userInput: loginInputType) => Promise<void>;
   checkAuth: () => Promise<void>;
   changePassword: (userInput: ChangePasswordInputType) => Promise<void>;
-  logout: () => Promise<boolean>;
+  logout: () => Promise<void>;
   resetUserRecord: () => void;
 }
 
@@ -166,30 +166,16 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
   //   logout controller
   logout: async () => {
     try {
-      Alert.alert("Logout", "Are you sure you want to logout?", [
-        {
-          text: "No",
-          onPress: () => {},
-        },
-        {
-          text: "Yes",
-          onPress: async () => {
-            await AsyncStorage.removeItem("token");
-            set({
-              isAuthenticated: false,
-              isAdmin: false,
-              user: null,
-              token: null,
-            });
-            Alert.alert("Logged out successfully");
-            return true;
-          },
-        },
-      ]);
-      return false;
+      await AsyncStorage.removeItem("token");
+      set({
+        isAuthenticated: false,
+        isAdmin: false,
+        user: null,
+        token: null,
+      });
+      Alert.alert("Logged out successfully");
     } catch (error) {
       Alert.alert("Error Logging out");
-      return false;
     }
   },
   //   reset controller

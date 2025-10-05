@@ -25,8 +25,8 @@ interface BatchStoreInterface {
   getAllBatches: (token: string) => Promise<void>;
   getBatchListForStudent: (token: string) => Promise<void>;
   getBatchListForTeacher: (token: string) => Promise<void>;
-  getBatchStudents: (batchId: string, token: string) => Promise<void>;
-  getAllStudentsForBatch: (batchId: string, token: string) => Promise<void>;
+  getBatchStudents: (token: string) => Promise<void>;
+  getAllStudentsForBatch: (token: string) => Promise<void>;
   changeBatchJoiningCode: (batchId: string, token: string) => Promise<void>;
   addStudentsToBatch: (
     input: Add_To_BatchInputType,
@@ -61,8 +61,8 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
         },
       });
       if (batches.status === 400) throw new Error(batches.data.message);
-      set({ batchListForStudents: batches.data.batchDetails });
-    } catch (error) {
+      set({ batchListForStudents: batches.data.batches });
+    } catch (error: any) {
     } finally {
       set({ isLoading: false });
     }
@@ -102,8 +102,9 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
     }
   },
   //   get batch students
-  getBatchStudents: async (batchId, token) => {
-    if (!token) return;
+  getBatchStudents: async (token) => {
+    const batchId = get().selectedBatch?._id;
+    if (!token || !batchId) return;
     try {
       set({ isLoading: true, batchStudentList: [] });
       const batchDetails = await axios.get(
@@ -174,7 +175,7 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
         {
           text: "OK",
           onPress: () => {
-            get().getBatchStudents(input.batchId, token);
+            get().getBatchStudents(token);
             return true;
           },
         },
@@ -186,10 +187,11 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
     }
   },
   //   get all students for the batch
-  getAllStudentsForBatch: async (batchId, token) => {
+  getAllStudentsForBatch: async (token) => {
     try {
+      const batchId = get().selectedBatch?._id;
       if (!batchId || !token) return;
-      set({ isLoading: true, allStudentsForBatch: [] });
+      set({ allStudentsForBatch: [] });
       const response = await axios.get(
         batchApis.getAllStudentList.replace(":batchId", batchId),
         {
@@ -199,9 +201,9 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
         }
       );
       if (response.status === 400) throw new Error(response.data.message);
-    } catch (error) {
-    } finally {
-      set({ isLoading: false });
+      set({ allStudentsForBatch: response.data.students });
+    } catch (error: any) {
+      console.log(error.response.data);
     }
   },
   //   change batch joining code
@@ -250,7 +252,7 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
       );
       if (response.status === 400) throw new Error(response.data.message);
       Alert.alert("Success", response.data.message);
-      get().getBatchStudents(input.batchId, token);
+      get().getBatchStudents(token);
       return true;
     } catch (error: any) {
       console.log(error.response.data);
@@ -285,7 +287,7 @@ export const useBatchStore = create<BatchStoreInterface>((set, get) => ({
   leaveBatch: async (batchId, token) => {
     if (!token || !batchId) return false;
     try {
-      const response = await axios.put(
+      const response = await axios.post(
         batchApis.leaveBatch,
         { batchId },
         {

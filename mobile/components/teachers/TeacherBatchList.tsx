@@ -3,6 +3,7 @@ import { useBatchStore } from "@/store/batch.store";
 import { BatchForTeacherType } from "@/types";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -384,16 +385,6 @@ const ListHeader = ({
         )}
       />
 
-      {/* Quick Actions */}
-      {/* <QuickActions
-        onCreateBatch={() =>
-          Alert.alert("Info", "Contact admin to create new batches")
-        }
-        onViewAllStudents={() =>
-          Alert.alert("Feature", "Student list coming soon!")
-        }
-      /> */}
-
       {/* Search Bar */}
       <Animated.View
         entering={FadeInUp.duration(500).delay(400).springify()}
@@ -428,16 +419,9 @@ const TeacherBatchList: React.FC = () => {
     isLoading,
   } = useBatchStore();
   const { token } = useUserStore();
-
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [refreshing, setRefreshing] = useState(false);
-
-  // Load batches on component mount
-  useEffect(() => {
-    if (token) {
-      getBatchListForTeacher(token);
-    }
-  }, [token]);
 
   const filteredBatches = (): BatchForTeacherType[] => {
     if (search) {
@@ -456,7 +440,7 @@ const TeacherBatchList: React.FC = () => {
   const handleBatchPress = async (batch: BatchForTeacherType) => {
     setSelectedBatch(batch);
     // Navigate to batch details screen
-    Alert.alert("Batch Selected", `Opening ${batch.name} details...`);
+    router.push("/teachers/BatchDetails");
   };
 
   // Handle delete batch

@@ -80,8 +80,8 @@ const StudentBatchItem: React.FC<{
               </View>
             </View>
 
-            <View className="flex-row items-center justify-between mt-2">
-              <View className="flex-row items-center">
+            <View className="gap-1 mt-2">
+              <View className="flex-row items-center ">
                 <Feather name="user" size={14} color="#6b7280" />
                 <Text className="ml-1 text-sm text-gray-600 font-outfit-medium">
                   {item.teacher.name}
@@ -90,14 +90,15 @@ const StudentBatchItem: React.FC<{
               <View className="flex-row items-center">
                 <Ionicons name="people-outline" size={14} color="#6b7280" />
                 <Text className="ml-1 text-sm text-gray-600 font-outfit-medium">
-                  {item.studentCount} students
+                  {item.studentCount}{" "}
+                  {item.studentCount === 1 ? "student" : "students"}
                 </Text>
               </View>
             </View>
           </View>
 
           {/* Action Buttons */}
-          <View className="flex-row items-center ml-2">
+          <View className="flex-row items-center mt-3 ml-2">
             <TouchableOpacity
               className="items-center justify-center w-10 h-10 mr-2 bg-red-50 rounded-xl"
               onPress={() => onLeave?.(item)}
