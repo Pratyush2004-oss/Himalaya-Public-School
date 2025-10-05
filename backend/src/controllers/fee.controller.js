@@ -1,7 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
-import FeeModel from "../models/fee.model";
-import { createRazorpayInstance } from "../config/razorpay.config";
-import { ENV } from "../config/env";
+import FeeModel from "../models/fee.model.js";
+import { createRazorpayInstance } from "../config/razorpay.config.js";
+import { ENV } from "../config/env.js";
 
 // oder fee via razorpay
 export const feeOrder = expressAsyncHandler(async (req, res, next) => {
@@ -40,7 +40,6 @@ export const feeOrder = expressAsyncHandler(async (req, res, next) => {
 // pay Fee 
 export const payFee = expressAsyncHandler(async (req, res, next) => {
     try {
-        const user = req.user;
         const { order_id, payment_id, signature, feeId } = req.body;
         const razorpaySecret = ENV.RAZORPAY_KEY_SECRET;
 
@@ -87,23 +86,15 @@ export const getAllFeeOftheCurrentUser = expressAsyncHandler(async (req, res, ne
                 }
             },
             {
-                $lookup: {
-                    from: "users",
-                    localField: "student",
-                    foreignField: "_id",
-                    as: "studentDetails"
-                }
-            }, {
-                $unwind: "$studentDetails"
-            },
-            {
                 $project: {
                     _id: 1,
                     amount: 1,
-                    student: { name: "$studentDetails.name" },
                     paid: 1,
                     mode: 1,
-                    createdAt: 1
+                    transactionDetail: 1,
+                    createdAt: 1,
+                    paidAt: 1,
+                    month: 1
                 }
             }
         ]);

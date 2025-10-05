@@ -9,6 +9,7 @@ import authRoutes from './routes/auth.route.js';
 import assignmentRoutes from './routes/assignment.routes.js';
 import batchRoutes from './routes/batch.route.js';
 import adminRoutes from './routes/admin.routes.js';
+import feeRoutes from './routes/fee.routes.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/assignment', assignmentRoutes);
 app.use('/api/batch', batchRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/fee', feeRoutes);
 
 app.use((err, req, res, next) => {
     console.error("Unhandled error: ", err);
