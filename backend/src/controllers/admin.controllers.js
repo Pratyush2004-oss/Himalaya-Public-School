@@ -340,7 +340,7 @@ export const createEvent = expressAsyncHandler(async (req, res, next) => {
                         resolve(result.secure_url);
                     }
                 });
-                streamifier.createReadStream(image.buffer).pipe(clg_upload_stream);
+                streamifier.createReadStream(image).pipe(clg_upload_stream);
             })
         }
 
