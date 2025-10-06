@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import BatchPicker from "./Batchicker";
+import BatchPicker from "./BatchPicker";
 import FileUploadSection, { FileItem } from "./FileUploadSection";
 
 const CreateAssignmentScreen = () => {

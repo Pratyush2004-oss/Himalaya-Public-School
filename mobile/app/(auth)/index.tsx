@@ -142,8 +142,9 @@ export default function AuthScreen() {
                       placeholderTextColor="#9CA3AF"
                       keyboardType="email-address"
                       value={input.email}
+                      placeholder="Enter your email address"
                       onChangeText={(e) => setinput({ ...input, email: e })}
-                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30"
+                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
                     />
                   </View>
 
@@ -153,11 +154,12 @@ export default function AuthScreen() {
                       Password
                     </Text>
                     <TextInput
+                    placeholder="Enter your password"
                       placeholderTextColor="#9CA3AF"
                       secureTextEntry={!showPassword}
                       value={input.password}
                       onChangeText={(e) => setinput({ ...input, password: e })}
-                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30"
+                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
                     />
                     <Pressable
                       className="absolute bottom-3 right-3"

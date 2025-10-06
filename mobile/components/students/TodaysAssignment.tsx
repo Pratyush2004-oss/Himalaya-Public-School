@@ -101,7 +101,8 @@ const EmptyState = () => (
 
 // --- Main Component ---
 const TodaysAssignment = () => {
-  const { todaysAssignment, getTodaysAssignment } = useAssignmentStore();
+  const { todaysAssignment, getTodaysAssignment, isLoading } =
+    useAssignmentStore();
   const { token } = useUserStore();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -119,7 +120,7 @@ const TodaysAssignment = () => {
     setRefreshing(false);
   };
 
-  if (todaysAssignment && todaysAssignment.length === 0) {
+  if (isLoading && (!todaysAssignment || todaysAssignment.length === 0)) {
     return (
       <View className="items-center justify-center flex-1 pt-10">
         <ActivityIndicator size="large" color="#0d9488" />

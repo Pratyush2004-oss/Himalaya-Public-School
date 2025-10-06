@@ -247,8 +247,10 @@ const StudentInfoCard: React.FC<{ user: AllUsersType }> = ({ user }) => {
             className={`w-16 h-16 ${getAvatarColor()} rounded-2xl items-center justify-center mr-4`}
           >
             <Text className="text-xl text-white font-outfit-bold">
-              {user.name.charAt(0).toUpperCase() +
-                user.name.split(" ")[1].charAt(0).toUpperCase()}
+              {user.name.charAt(0).toUpperCase()}
+              {user.name.split(" ")[1]
+                ? user.name.split(" ")[1].charAt(0).toUpperCase()
+                : ""}
             </Text>
           </View>
 

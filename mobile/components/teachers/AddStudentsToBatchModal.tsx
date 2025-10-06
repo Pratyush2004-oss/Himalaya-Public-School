@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   FlatList,
   Modal,
+  RefreshControl,
   Text,
   TextInput,
   TouchableOpacity,
@@ -81,9 +82,7 @@ const AddStudentsToBatchModal: React.FC<{
   useEffect(() => {
     if (modalVisible && token) {
       // Fetch all students if not already present
-      if (allStudentsForBatch.length === 0) {
-        getAllStudentsForBatch(token).finally(() => setisLoading(false));
-      }
+      getAllStudentsForBatch(token).finally(() => setisLoading(false));
     }
   }, [modalVisible, token]);
 
@@ -139,6 +138,12 @@ const AddStudentsToBatchModal: React.FC<{
     }
   };
 
+  // handle refresh
+  const refreshData = () => {
+    setisLoading(true);
+    getAllStudentsForBatch(token as string).finally(() => setisLoading(false));
+  };
+
   return (
     <Modal
       visible={modalVisible}
@@ -177,7 +182,7 @@ const AddStudentsToBatchModal: React.FC<{
         {isLoading &&
         allStudentsForBatch &&
         allStudentsForBatch.length === 0 ? (
-          <ActivityIndicator size="large" color="#14b8a6" className="mt-10" />
+          <ActivityIndicator size="large" color="#14b8a6" className="my-auto" />
         ) : (
           <FlatList
             data={filteredStudents()}
@@ -190,6 +195,9 @@ const AddStudentsToBatchModal: React.FC<{
                 onSelect={() => handleSelectStudent(item._id)}
               />
             )}
+            refreshControl={
+              <RefreshControl refreshing={isLoading} onRefresh={refreshData} />
+            }
             ListEmptyComponent={
               <EmptyState message="All students are already in this batch or your search found no results." />
             }

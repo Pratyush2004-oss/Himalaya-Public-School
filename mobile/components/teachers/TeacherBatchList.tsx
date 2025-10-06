@@ -123,7 +123,7 @@ const TeacherBatchItem: React.FC<{
               >
                 <MaterialCommunityIcons name="school" size={12} />
                 <Text className="ml-1 text-xs font-outfit-medium">
-                  Class {item.standard}
+                  Class: {item.standard}
                 </Text>
               </View>
             </View>

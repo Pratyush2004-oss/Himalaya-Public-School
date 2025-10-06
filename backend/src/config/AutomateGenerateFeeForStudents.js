@@ -19,13 +19,7 @@ const AutomateGenerateFeeForStudents = async () => {
         return;
     }
 
-    const today = new Date();
-    const isFirstDayOfMonth = today.getDate() === 1;
-
-    if (!isFirstDayOfMonth) {
-        return;
-    }
-
+    // generate fee for student as per the standard if the fee detail doesnot exist for the current month
     for (const student of students) {
         // get the fee for the student as per the standard
         const fee = FeeMappingUsingStandard[student.standard];

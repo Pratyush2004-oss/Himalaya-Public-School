@@ -146,7 +146,7 @@ export default function SignupScreen() {
               tint="dark"
               className="p-8 overflow-hidden rounded-3xl"
             >
-              <Text className="mb-2 text-4xl font-bold text-center text-white font-outfit ">
+              <Text className="mb-2 text-4xl text-center text-white font-outfit-bold ">
                 Himlaya Public School
               </Text>
               <Text className="mb-8 text-lg text-center text-gray-300 font-outfit ">
@@ -157,23 +157,30 @@ export default function SignupScreen() {
                 <View className="flex-row flex-wrap justify-between">
                   {/* Name */}
                   <View className="w-full mb-4">
-                    <Text className="mb-2 text-gray-300 font-outfit ">Full Name</Text>
+                    <Text className="mb-2 text-gray-300 font-outfit ">
+                      Full Name
+                    </Text>
                     <TextInput
                       placeholderTextColor="#9CA3AF"
+                      placeholder="Enter your full name"
                       value={input.name}
                       onChangeText={(e) => setinput({ ...input, name: e })}
-                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30"
+                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
                     />
                   </View>
 
                   {/* Email */}
                   <View className="w-full mb-4">
-                    <Text className="mb-2 text-gray-300 font-outfit ">Email</Text>
+                    <Text className="mb-2 text-gray-300 font-outfit ">
+                      Email
+                    </Text>
                     <TextInput
+                      placeholder="Enter your email"
+                      autoCapitalize="none"
                       placeholderTextColor="#9CA3AF"
                       value={input.email}
                       onChangeText={(e) => setinput({ ...input, email: e })}
-                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30"
+                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
                       keyboardType="email-address"
                     />
                   </View>
@@ -182,7 +189,9 @@ export default function SignupScreen() {
                   <View
                     className={`${input.role === "student" ? "w-[48%]" : "w-full"} mb-4`}
                   >
-                    <Text className="mb-2 text-gray-300 font-outfit ">Role</Text>
+                    <Text className="mb-2 text-gray-300 font-outfit ">
+                      Role
+                    </Text>
                     <View
                       className="border border-gray-500 rounded-lg bg-black/30"
                       style={{ height: 48 }}
@@ -190,6 +199,7 @@ export default function SignupScreen() {
                       <Picker
                         style={{
                           color: "white",
+                          fontFamily: "Outfit",
                           height: 48,
                           marginLeft: 0, // Adjust for proper alignment
                         }}
@@ -202,6 +212,7 @@ export default function SignupScreen() {
                         {RoleList.map((item, idx) => (
                           <Picker.Item
                             key={idx}
+                            style={{ fontFamily: "Outfit" }}
                             label={item.toUpperCase()}
                             value={item}
                           />
@@ -213,13 +224,16 @@ export default function SignupScreen() {
                   {/* Standard */}
                   {input.role === "student" && (
                     <View className="w-[48%] mb-4">
-                      <Text className="mb-2 text-gray-300 font-outfit ">Standard</Text>
+                      <Text className="mb-2 text-gray-300 font-outfit ">
+                        Standard
+                      </Text>
                       <View
                         className="border border-gray-500 rounded-lg bg-black/30"
                         style={{ height: 48 }}
                       >
                         <Picker
                           style={{
+                            fontFamily: "Outfit",
                             color: "white",
                             height: 48,
                             marginLeft: 0, // Adjust for proper alignment
@@ -229,7 +243,11 @@ export default function SignupScreen() {
                           dropdownIconRippleColor={"white"}
                           onValueChange={(e) => handleChangeStandard(e)}
                         >
-                          <Picker.Item label="Select Standard" value="" />
+                          <Picker.Item
+                            style={{ fontFamily: "Outfit" }}
+                            label="Select Standard"
+                            value=""
+                          />
                           {StandardsList.map((item, idx) => (
                             <Picker.Item
                               key={idx}
@@ -244,13 +262,16 @@ export default function SignupScreen() {
 
                   {/* Password */}
                   <View className="relative w-full mb-4">
-                    <Text className="mb-2 text-gray-300 font-outfit ">Password</Text>
+                    <Text className="mb-2 text-gray-300 font-outfit ">
+                      Password
+                    </Text>
                     <TextInput
                       placeholderTextColor="#9CA3AF"
                       secureTextEntry={!showPassword}
                       value={input.password}
                       onChangeText={(e) => setinput({ ...input, password: e })}
-                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30"
+                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
+                      placeholder="Enter your password"
                     />
                     <Pressable
                       className="absolute bottom-3 right-3"
@@ -285,7 +306,9 @@ export default function SignupScreen() {
               {/* Divider */}
               <View className="flex-row items-center my-6">
                 <View className="flex-1 h-px bg-gray-500" />
-                <Text className="mx-4 text-gray-400 font-outfit ">or continue with</Text>
+                <Text className="mx-4 text-gray-400 font-outfit ">
+                  or continue with
+                </Text>
                 <View className="flex-1 h-px bg-gray-500" />
               </View>
 

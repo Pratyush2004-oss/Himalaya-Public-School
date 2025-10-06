@@ -71,8 +71,8 @@ const UserItem: React.FC<{
             className={`w-14 h-14 ${getAvatarColors(index)} rounded-2xl items-center justify-center`}
           >
             <Text className="text-lg text-white font-outfit-bold">
-              {item.name.charAt(0).toUpperCase() +
-                item.name.split(" ")[1].charAt(0).toUpperCase()}
+              {item.name.charAt(0).toUpperCase()}
+              {item.name.split(" ")[1] ? item.name.split(" ")[1].charAt(0) : ""}
             </Text>
           </View>
 
