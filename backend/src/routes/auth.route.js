@@ -9,6 +9,6 @@ router.post('/login', loginUser);
 router.get("/check-auth", AuthMiddleware, checkAuth);
 router.get("/check-admin", AuthMiddleware, requireAdmin, checkAdmin);
 router.post('/change-password', AuthMiddleware, changePassword);
-router.get("/get-all-events", AuthMiddleware, getEventList);
+router.get("/get-all-events", getEventList);
 
 export default router;
