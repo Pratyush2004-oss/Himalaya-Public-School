@@ -4,6 +4,9 @@ import UserModel from "../models/auth.model.js";
 import mongoose from "mongoose";
 import FeeModel from "../models/fee.model.js";
 import AssignmentModel from "../models/assignment.model.js";
+import EventModel from "../models/events.model.js";
+import cloudinary from "../config/cloudinary.js";
+import streamifier from "streamifier";
 
 // Controllers that admin can access
 
@@ -304,3 +307,85 @@ export const verifyFeePayment = expressAsyncHandler(async (req, res, next) => {
         next(error);
     }
 })
+
+// events
+
+// create event
+export const createEvent = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const { title, description, date } = req.body;
+        const image = req.file;
+        if (!title || !description || !date) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+        if (!image) {
+            return res.status(400).json({ message: "Image is required" });
+        }
+
+        // upload image to cloudinary
+        const uploadImage = (image) => {
+            const publicId = image.originalname;
+            return new Promise((resolve, reject) => {
+                const clg_upload_stream = cloudinary.uploader.upload_stream({
+                    resource_type: "image",
+                    folder: "Himalaya-Public-School",
+                    public_id: publicId,
+                    overwrite: false
+                }, (error, result) => {
+                    if (error) {
+                        console.error('Cloudinary Upload Error:', error);
+                        reject(new Error('Cloudinary Upload Error'));
+                    }
+                    else {
+                        resolve(result.secure_url);
+                    }
+                });
+                streamifier.createReadStream(image.buffer).pipe(clg_upload_stream);
+            })
+        }
+
+        const imageUrl = await uploadImage(image.buffer);
+        await EventModel.create({
+            title,
+            date,
+            description,
+            image: imageUrl,
+        });
+        return res.status(201).json({ message: "Event created successfully" });
+    } catch (error) {
+        console.log("Error in createEvent controller: " + error);
+        next(error);
+    }
+})
+
+// update event status
+export const changeEventStatus = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const { eventId } = req.params;
+        const event = await EventModel.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+        event.public = !event.public;
+        await event.save();
+        return res.status(200).json({ message: `Event marked as ${event.public ? "public" : "private"}` });
+    } catch (error) {
+        console.log("Error in changeEventStatus controller: " + error);
+        next(error);
+    }
+});
+
+// delete event
+export const deleteEvent = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const { eventId } = req.params;
+        const event = await EventModel.findByIdAndDelete(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+        return res.status(200).json({ message: "Event deleted successfully" });
+    } catch (error) {
+        console.log("Error in deleteEvent controller: " + error);
+        next(error);
+    }
+});

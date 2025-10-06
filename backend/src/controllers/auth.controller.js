@@ -3,6 +3,7 @@ import UserModel from '../models/auth.model.js';
 import bcrypt from 'bcryptjs';
 import { ENV } from '../config/env.js'
 import jwt from 'jsonwebtoken';
+import EventModel from '../models/events.model.js';
 
 // generate the token
 const generateToken = (id) => {
@@ -175,3 +176,26 @@ export const changePassword = expressAsyncHandler(async (req, res, next) => {
         next(error);
     }
 });
+
+// get event list
+export const getEventList = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const events = await EventModel.aggregate({
+            $match: { public: true },
+            $project: {
+                _id: 1,
+                title: 1,
+                date: 1,
+                description: 1,
+                image: 1,
+            },
+            $sort: {
+                updatedAt: -1
+            }
+        });
+
+        res.status(200).json({ events });
+    } catch (error) {
+
+    }
+})
