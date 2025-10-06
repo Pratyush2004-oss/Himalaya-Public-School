@@ -128,6 +128,13 @@ export type CreateBatchInputType = {
   standard: string;
 };
 
+export type CreateEventInputType = {
+  title: string;
+  description: string;
+  date: Date;
+  image: File | DocumentPickerAsset | null;
+};
+
 // FEE TYPE
 export type FeeType = {
   _id: string;
@@ -161,3 +168,13 @@ export type CreateAssignmentInputType = {
   files: (File | DocumentPickerAsset)[];
 };
 
+// event Type
+
+export type EventType = {
+  _id: string;
+  title: string;
+  description: string;
+  date: string;
+  image: string;
+  public: boolean;
+};

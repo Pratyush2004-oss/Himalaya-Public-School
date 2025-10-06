@@ -3,7 +3,7 @@ import { Feather, Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import { DocumentPickerAsset } from "expo-document-picker";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import Animated, {
   FadeInDown,
   FadeInRight,
@@ -88,7 +88,7 @@ const FileUploadSection = ({
         }));
       }
     } catch (error) {
-      console.error("Error picking document: ", error);
+      Alert.alert("Error picking document ");
     }
   };
 

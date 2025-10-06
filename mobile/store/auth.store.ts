@@ -1,5 +1,6 @@
 import {
   ChangePasswordInputType,
+  EventType,
   loginInputType,
   registerInputType,
   UserType,
@@ -16,22 +17,25 @@ interface UserStoreInterface {
   isAdmin: boolean;
   user: UserType | null;
   token: string | null;
+  eventsList: EventType[];
 
   signup: (userInput: registerInputType) => Promise<boolean>;
   login: (userInput: loginInputType) => Promise<void>;
   checkAuth: () => Promise<void>;
   changePassword: (userInput: ChangePasswordInputType) => Promise<void>;
   logout: () => Promise<void>;
+  getEventsList: () => Promise<void>;
   resetUserRecord: () => void;
 }
 
-export const useUserStore = create<UserStoreInterface>((set) => ({
+export const useUserStore = create<UserStoreInterface>((set, get) => ({
   isAuthenticated: false,
   isCheckingAuth: true,
   isAdmin: false,
   isOrganizationAdmin: false,
   user: null,
   token: null,
+  eventsList: [],
 
   //   signup controller
   signup: async (userInput) => {
@@ -172,11 +176,19 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
         isAdmin: false,
         user: null,
         token: null,
+        eventsList: [],
       });
       Alert.alert("Logged out successfully");
     } catch (error) {
       Alert.alert("Error Logging out");
     }
+  },
+  getEventsList: async () => {
+    try {
+      const response = await axios.get(UserApis.getEventsList);
+      if (response.status === 400) throw new Error(response.data.message);
+      set({ eventsList: response.data.events });
+    } catch (error: any) {}
   },
   //   reset controller
   resetUserRecord: () => {
@@ -185,6 +197,7 @@ export const useUserStore = create<UserStoreInterface>((set) => ({
       isAdmin: false,
       user: null,
       token: null,
+      eventsList: [],
     });
   },
 }));

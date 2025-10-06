@@ -34,10 +34,10 @@ const TabHeader = () => {
               <Feather name="grid" size={24} color="rgb(31 41 55)" />
             </TouchableOpacity>
           )}
-          <TouchableOpacity className="p-2 rounded-full bg-gray-300/50">
-            <Feather name="search" size={24} color="rgb(31 41 55)" />
-          </TouchableOpacity>
-          <TouchableOpacity className="p-2 rounded-full bg-gray-300/50">
+          <TouchableOpacity
+            className="p-2 rounded-full bg-gray-300/50"
+            onPress={() => router.push("/notifications")}
+          >
             <Feather name="bell" size={24} color="rgb(31 41 55)" />
           </TouchableOpacity>
         </View>

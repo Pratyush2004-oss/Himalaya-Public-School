@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import EventsFlatList from "./EventsFlatList";
 // TypeScript type for Quick Access items
 type QuickAccessItem = {
   name: string;
@@ -112,6 +113,7 @@ const HomeScreenComponent = () => {
         </Animated.View>
 
         {/* Recent Updates Section */}
+        <EventsFlatList />
         <Animated.View
           entering={FadeInDown.duration(500).delay(600).springify()}
         >

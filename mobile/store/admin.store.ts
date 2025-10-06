@@ -5,11 +5,13 @@ import {
   AllUsersType,
   CountType,
   CreateBatchInputType,
+  CreateEventInputType,
   SelectedUserType,
 } from "@/types";
 import axios from "axios";
 import { Alert } from "react-native";
 import { create } from "zustand";
+import { useUserStore } from "./auth.store";
 
 interface AdminStoreInterface {
   isLoading: boolean;
@@ -18,6 +20,9 @@ interface AdminStoreInterface {
   selectedStudent: SelectedUserType | null;
   allTeachers: AllTeachersType[];
   allBatches: AllBatchesType[];
+  createEvent: (input: CreateEventInputType, token: string) => Promise<void>;
+  updateEventStatus: (eventId: string, token: string) => Promise<void>;
+  deleteEvent: (eventId: string, token: string) => Promise<void>;
   getAllUsers: (token: string) => Promise<void>;
   verifyUser: (userId: string, token: string) => Promise<boolean | void>;
   getUserById: (userId: string, token: string) => Promise<boolean>;
@@ -288,6 +293,106 @@ export const useAdminStore = create<AdminStoreInterface>((set, get) => ({
     } finally {
       set({ isLoading: false });
     }
+  },
+
+  // create event
+  createEvent: async (input, token) => {
+    try {
+      if (!input.image) return;
+      const getEventsList = useUserStore.getState().getEventsList;
+      if (!token) return;
+      const formData = new FormData();
+      formData.append("title", input.title);
+      formData.append("description", input.description);
+      formData.append("date", input.date.toISOString().split("T")[0]);
+      let fileToUpload;
+      if ("uri" in input.image) {
+        fileToUpload = {
+          uri: input.image.uri,
+          name: input.image.name,
+          type: "image/jpeg",
+        };
+      } else if (input.image instanceof File) {
+        fileToUpload = {
+          uri: URL.createObjectURL(input.image),
+          name: input.image.name,
+          type: input.image.type,
+        };
+      } else {
+        throw new Error("Invalid image type");
+      }
+      formData.append("image", fileToUpload as any);
+
+      // end to fix
+      const response = await axios.post(adminApis.createEvent, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      if (response.status === 400) throw new Error(response.data.message);
+      Alert.alert("Success", response.data.message, [
+        {
+          text: "OK",
+          onPress: () => {
+            getEventsList();
+          },
+        },
+      ]);
+    } catch (error: any) {
+      if (error.isAxiosError) Alert.alert("Error", error.response.data.message);
+      else Alert.alert("Error", error.message);
+    }
+  },
+  // update event
+  updateEventStatus: async (eventId, token) => {
+    const getEventsList = useUserStore.getState().getEventsList;
+    try {
+      if (!token || !eventId) return;
+      const response = await axios.get(
+        adminApis.updateEventStatus.replace(":eventId", eventId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 400) throw new Error(response.data.message);
+      Alert.alert("Success", response.data.message, [
+        {
+          text: "OK",
+          onPress: () => {
+            getEventsList();
+          },
+        },
+      ]);
+    } catch (error: any) {
+      console.log(error.response.data);
+    }
+  },
+  // delete event
+  deleteEvent: async (eventId, token) => {
+    const getEventsList = useUserStore.getState().getEventsList;
+    try {
+      if (!token) return;
+      const response = await axios.delete(
+        adminApis.deleteEvent.replace(":eventId", eventId),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 400) throw new Error(response.data.message);
+      Alert.alert("Success", response.data.message, [
+        {
+          text: "OK",
+          onPress: () => {
+            getEventsList();
+          },
+        },
+      ]);
+    } catch (error) {}
   },
 
   // reset

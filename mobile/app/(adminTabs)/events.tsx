@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
+import EventFlatList from "@/components/admin/EventsFlatList";
 
 const Events = () => {
   return (
-    <View>
-      <Text>Events</Text>
+    <View className="flex-1">
+      <EventFlatList />
     </View>
   );
 };

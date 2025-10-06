@@ -9,14 +9,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TabLayout = () => {
   const insets = useSafeAreaInsets();
-  const { token, user } = useUserStore();
+  const { token, user, eventsList, getEventsList } = useUserStore();
   const { getBatchListForTeacher } = useBatchStore();
   // Load batches on component mount
   useEffect(() => {
     if (token && user?.role === "teacher") {
       getBatchListForTeacher(token);
     }
+    if (token && eventsList.length === 0) getEventsList();
   }, [token]);
+
   return (
     <View className="flex-1">
       <TabHeader />

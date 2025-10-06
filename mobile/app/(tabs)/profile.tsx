@@ -133,7 +133,7 @@ const ProfileScreen = () => {
                 </Text>
                 <Feather name="chevron-right" size={20} color="#9ca3af" />
               </TouchableOpacity>
-              <TouchableOpacity className="flex-row items-center justify-between w-full p-4 border-b border-gray-100 active:bg-gray-100">
+              <TouchableOpacity className="flex-row items-center justify-between w-full p-4 border-b border-gray-100 active:bg-gray-100" onPress={() => router.push('/notifications')}>
                 <Text className="text-gray-700 font-outfit-medium">
                   Notifications
                 </Text>

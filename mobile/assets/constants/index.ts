@@ -8,6 +8,7 @@ export const UserApis = {
   checkAuth: `${BASE_URL}/auth/check-auth`,
   checkAdmin: `${BASE_URL}/auth/check-admin`,
   changePassword: `${BASE_URL}/auth/change-password`,
+  getEventsList: `${BASE_URL}/auth/get-all-events`,
 };
 
 // batch apis
@@ -55,6 +56,10 @@ export const adminApis = {
   deleteBatch: `${BASE_URL}/admin/delete-batch/:batchId`,
   // fee apis
   verifyFeePayment: `${BASE_URL}/admin/verify-fee-payment`,
+  // event apis
+  createEvent: `${BASE_URL}/admin/create-event`,
+  deleteEvent: `${BASE_URL}/admin/delete-event/:eventId`,
+  updateEventStatus: `${BASE_URL}/admin/change-event-status/:eventId`,
 };
 
 export const StandardsList = [
