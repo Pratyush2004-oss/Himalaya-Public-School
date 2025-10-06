@@ -180,23 +180,22 @@ export const changePassword = expressAsyncHandler(async (req, res, next) => {
 // get event list
 export const getEventList = expressAsyncHandler(async (req, res, next) => {
     try {
-        const events = await EventModel.aggregate({
-            $match: {},
-            $project: {
-                _id: 1,
-                title: 1,
-                date: 1,
-                description: 1,
-                image: 1,
-                public: 1
-            },
-            $sort: {
-                updatedAt: -1
+        const events = await EventModel.aggregate([
+            {
+                $project: {
+                    _id: 1,
+                    title: 1,
+                    date: 1,
+                    description: 1,
+                    image: 1,
+                    public: 1,
+                },
             }
-        });
+        ]);
 
         res.status(200).json({ events });
     } catch (error) {
-
+        console.log("Error in get-all-events", error);
+        next(error);
     }
 });
