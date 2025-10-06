@@ -181,13 +181,14 @@ export const changePassword = expressAsyncHandler(async (req, res, next) => {
 export const getEventList = expressAsyncHandler(async (req, res, next) => {
     try {
         const events = await EventModel.aggregate({
-            $match: { public: true },
+            $match: {},
             $project: {
                 _id: 1,
                 title: 1,
                 date: 1,
                 description: 1,
                 image: 1,
+                public: 1
             },
             $sort: {
                 updatedAt: -1
@@ -198,4 +199,4 @@ export const getEventList = expressAsyncHandler(async (req, res, next) => {
     } catch (error) {
 
     }
-})
+});
