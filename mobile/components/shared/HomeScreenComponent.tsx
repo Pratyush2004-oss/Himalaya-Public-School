@@ -113,43 +113,16 @@ const HomeScreenComponent = () => {
         </Animated.View>
 
         {/* Recent Updates Section */}
-        <EventsFlatList />
         <Animated.View
           entering={FadeInDown.duration(500).delay(600).springify()}
         >
-          <View className="mt-6">
+          <View className="mt-6 mb-3">
             <Text className="text-lg text-gray-800 font-outfit-bold">
               Recent Updates
             </Text>
-            <View className="relative items-center justify-center h-48 mt-4 overflow-hidden bg-teal-50/70 rounded-2xl">
-              {/* Decorative background elements */}
-              <View className="absolute w-40 h-40 rounded-full bg-teal-100/50 -top-10 -left-10" />
-              <View className="absolute w-40 h-40 rounded-full bg-teal-100/50 -bottom-10 -right-10" />
-
-              {/* Central Icon */}
-              <View className="items-center justify-center w-16 h-16 bg-teal-200/80 rounded-2xl">
-                <Feather name="award" size={30} color="#14b8a6" />
-              </View>
-              {/* Surrounding Icons (simplified representation) */}
-              <View className="absolute items-center justify-center w-10 h-10 rounded-lg top-5 left-10 bg-white/70 backdrop-blur-sm">
-                <Feather name="book-open" size={20} color="#14b8a6" />
-              </View>
-              <View className="absolute items-center justify-center w-10 h-10 rounded-lg top-10 right-8 bg-white/70 backdrop-blur-sm">
-                <Feather name="clipboard" size={20} color="#14b8a6" />
-              </View>
-              <View className="absolute items-center justify-center w-10 h-10 rounded-lg bottom-5 right-12 bg-white/70 backdrop-blur-sm">
-                <Feather name="lock" size={20} color="#14b8a6" />
-              </View>
-              <View className="absolute items-center justify-center w-10 h-10 rounded-lg bottom-10 left-8 bg-white/70 backdrop-blur-sm">
-                <Feather name="user-check" size={20} color="#14b8a6" />
-              </View>
-
-              <Text className="absolute text-xs font-outfit-medium bottom-4 text-teal-700/80">
-                Progress analytics updated
-              </Text>
-            </View>
           </View>
         </Animated.View>
+        <EventsFlatList />
       </View>
     </ScrollView>
   );

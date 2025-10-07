@@ -305,23 +305,12 @@ export const useAdminStore = create<AdminStoreInterface>((set, get) => ({
       formData.append("title", input.title);
       formData.append("description", input.description);
       formData.append("date", input.date.toISOString().split("T")[0]);
-      let fileToUpload;
-      if ("uri" in input.image) {
-        fileToUpload = {
-          uri: input.image.uri,
-          name: input.image.name,
-          type: "image/jpeg",
-        };
-      } else if (input.image instanceof File) {
-        fileToUpload = {
-          uri: URL.createObjectURL(input.image),
-          name: input.image.name,
-          type: input.image.type,
-        };
-      } else {
-        throw new Error("Invalid image type");
-      }
-      formData.append("image", fileToUpload as any);
+
+      formData.append("image", {
+        uri: input.image,
+        name: "image.jpeg",
+        type: "image/jpeg",
+      } as any);
 
       // end to fix
       const response = await axios.post(adminApis.createEvent, formData, {

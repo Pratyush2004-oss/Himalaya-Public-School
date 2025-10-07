@@ -5,8 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { Image } from "expo-image";
-import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import {
@@ -16,6 +15,7 @@ import {
   Platform,
   ScrollView,
   Text,
+  Image,
   TextInput,
   TouchableOpacity,
   View,
@@ -44,12 +44,11 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     title: "",
     description: "",
     date: new Date(),
-    image: null,
+    image: "",
   });
   const [isLoading, setisLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedImage, setselectedImage] = useState("");
 
   const overlayOpacity = useSharedValue(0);
   const modalScale = useSharedValue(0.8);
@@ -60,7 +59,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
       title: "",
       description: "",
       date: new Date(),
-      image: null,
+      image: "",
     });
     setErrors({});
     setisLoading(false);
@@ -95,27 +94,33 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
   const handleImagePick = async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: "image/*",
-        multiple: false,
+      if (Platform.OS !== "web") {
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert(
+            "Permission Denied",
+            "We need camera roll permission to make this work!"
+          );
+          return;
+        }
+      }
+
+      // launch Image Library
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: "images",
+        allowsEditing: true,
+        quality: 0.8,
+        aspect: [4, 3],
+        base64: true,
       });
-      if (result.assets && result.assets.length > 0) {
-        setselectedImage(result.assets[0].uri);
-        setInput((prev) => ({
-          ...prev,
-          image: result.assets[0],
-        }));
-      } else {
-        setselectedImage("");
-        setInput((prev) => ({
-          ...prev,
-          image: null,
-        }));
+      if (!result.canceled) {
+        setInput({ ...input, image: result.assets[0].uri });
+        if (errors.image) setErrors({ ...errors, image: "" });
       }
     } catch (error) {
       Alert.alert("Error picking image");
     }
-    if (errors.image) setErrors({ ...errors, image: "" });
   };
 
   const handleDateChange = (
@@ -194,11 +199,10 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
                     errors.image ? "border-red-400" : "border-gray-300"
                   }`}
                 >
-                  {selectedImage ? (
+                  {input.image ? (
                     <Image
-                      source={{ uri: selectedImage }}
+                      source={{ uri: input.image }}
                       className="w-full h-full rounded-2xl"
-                      contentFit="cover"
                     />
                   ) : (
                     <View className="items-center">
@@ -287,6 +291,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
               {showDatePicker && (
                 <DateTimePicker
                   value={input.date}
+                  minimumDate={new Date()}
                   mode="date"
                   display="default"
                   onChange={handleDateChange}

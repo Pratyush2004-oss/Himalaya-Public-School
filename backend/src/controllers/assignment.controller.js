@@ -135,6 +135,11 @@ export const getAssignment = expressasyncHandler(async (req, res, next) => {
                     homework: 1,
                     createdAt: 1
                 }
+            },
+            {
+                $sort: {
+                    createdAt: -1
+                }
             }
         ]);
 

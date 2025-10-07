@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 import Animated, { FadeInDown, FadeInRight } from "react-native-reanimated";
+import { File, Directory, Paths } from "expo-file-system";
 
 // --- UI Components ---
 
@@ -22,7 +23,22 @@ const HomeworkFileItem: React.FC<{ fileUrl: string; index: number }> = ({
   fileUrl,
   index,
 }) => {
-  const fileName = fileUrl.split("/").pop() || "Attachment";
+  const fileName = fileUrl
+    .split("/")
+    .pop()
+    ?.replace(/\?.*$/, "")
+    .replaceAll("%", "-");
+  const fileType = fileUrl.endsWith(".pdf") ? "pdf" : "Image";
+
+  const handleDownloadFile = async () => {
+    const destination = new Directory(Paths.cache, "pdfs");
+    try {
+      await File.downloadFileAsync(fileUrl, destination);
+      Alert.alert("Saved", `File saved.`);
+    } catch (error) {
+      Alert.alert("Error", "Error in Downloading the file");
+    }
+  };
 
   const handleViewFile = () => {
     Linking.openURL(fileUrl).catch((err) =>
@@ -38,17 +54,26 @@ const HomeworkFileItem: React.FC<{ fileUrl: string; index: number }> = ({
       className="flex-row items-center p-3 mt-2 bg-gray-50 rounded-xl"
     >
       <Ionicons name="document-text-outline" size={24} color="#0d9488" />
-      <Text
-        className="flex-1 mx-3 text-sm text-gray-700 font-outfit"
-        numberOfLines={1}
-      >
-        {fileName}
-      </Text>
+      <View className="w-2/3 gap-1">
+        <Text
+          className="flex-1 mx-3 text-sm text-gray-700 font-outfit"
+          numberOfLines={1}
+        >
+          {fileName}
+        </Text>
+        <Text className="ml-3 text-xs font-outfit">Type: {fileType}</Text>
+      </View>
       <TouchableOpacity
         onPress={handleViewFile}
         className="px-3 py-1 bg-teal-100 rounded-lg"
       >
         <Text className="text-xs text-teal-800 font-outfit-semibold">View</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={handleDownloadFile}
+        className="px-3 py-1 ml-1 bg-blue-100 rounded-lg"
+      >
+        <Feather name="download" color={"green"} size={15} />
       </TouchableOpacity>
     </Animated.View>
   );

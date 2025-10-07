@@ -1,6 +1,6 @@
 import { useUserStore } from "@/store/auth.store";
 import { EventType } from "@/types";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
@@ -10,9 +10,9 @@ import {
   Dimensions,
   Image,
   ViewToken,
-  ActivityIndicator,
 } from "react-native";
 import Animated, {
+  FadeInDown,
   FadeInUp,
   useAnimatedStyle,
   useSharedValue,
@@ -21,6 +21,40 @@ import Animated, {
 } from "react-native-reanimated";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+const ListHeaderComponent = () => {
+  return (
+    <Animated.View entering={FadeInDown.duration(500).delay(600).springify()}>
+      <View className="relative items-center justify-center h-56 overflow-hidden bg-teal-50/70 rounded-2xl">
+        {/* Decorative background elements */}
+        <View className="absolute w-40 h-40 rounded-full bg-teal-100/50 -top-10 -left-10" />
+        <View className="absolute w-40 h-40 rounded-full bg-teal-100/50 -bottom-10 -right-10" />
+
+        {/* Central Icon */}
+        <View className="items-center justify-center w-16 h-16 bg-teal-200/80 rounded-2xl">
+          <Feather name="award" size={30} color="#14b8a6" />
+        </View>
+        {/* Surrounding Icons (simplified representation) */}
+        <View className="absolute items-center justify-center w-10 h-10 rounded-lg top-5 left-10 bg-white/70 backdrop-blur-sm">
+          <Feather name="book-open" size={20} color="#14b8a6" />
+        </View>
+        <View className="absolute items-center justify-center w-10 h-10 rounded-lg top-10 right-8 bg-white/70 backdrop-blur-sm">
+          <Feather name="clipboard" size={20} color="#14b8a6" />
+        </View>
+        <View className="absolute items-center justify-center w-10 h-10 rounded-lg bottom-5 right-12 bg-white/70 backdrop-blur-sm">
+          <Feather name="lock" size={20} color="#14b8a6" />
+        </View>
+        <View className="absolute items-center justify-center w-10 h-10 rounded-lg bottom-10 left-8 bg-white/70 backdrop-blur-sm">
+          <Feather name="user-check" size={20} color="#14b8a6" />
+        </View>
+
+        <Text className="absolute text-xs font-outfit-medium bottom-4 text-teal-700/80">
+          Swipe to View the Recent Events
+        </Text>
+      </View>
+    </Animated.View>
+  );
+};
 
 // Individual Carousel Item Component
 const EventCarouselItem: React.FC<{ item: EventType; isViewable: boolean }> = ({
@@ -145,6 +179,8 @@ const EventsFlatList = () => {
     <FlatList
       data={filteredList}
       keyExtractor={(item) => item._id}
+      ListHeaderComponent={ListHeaderComponent}
+      ListHeaderComponentStyle={{ width: SCREEN_WIDTH }}
       horizontal
       pagingEnabled // This creates the carousel effect
       showsHorizontalScrollIndicator={false}

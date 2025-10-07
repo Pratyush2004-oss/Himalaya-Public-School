@@ -132,7 +132,7 @@ export type CreateEventInputType = {
   title: string;
   description: string;
   date: Date;
-  image: File | DocumentPickerAsset | null;
+  image: string;
 };
 
 // FEE TYPE
