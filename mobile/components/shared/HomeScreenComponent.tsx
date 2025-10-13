@@ -8,50 +8,68 @@ import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import EventsFlatList from "./EventsFlatList";
+import { useRouter } from "expo-router";
+import { useUserStore } from "@/store/auth.store";
 // TypeScript type for Quick Access items
 type QuickAccessItem = {
   name: string;
   icon: React.ReactNode;
   color: string;
+  link: string;
 };
 
 // Data for the Quick Access grid
 const quickAccessItems: QuickAccessItem[] = [
   {
-    name: "Timetable",
+    name: "Baches",
     icon: <Ionicons name="calendar-outline" size={24} color="#6366f1" />,
     color: "bg-indigo-100",
+    link: "/batches",
   },
   {
-    name: "Grades",
+    name: "Today's Assignments",
+    icon: <Ionicons name="time-outline" size={24} color="#10b981" />,
+    color: "bg-emerald-100",
+    link: "/assignment",
+  },
+  {
+    name: "Events",
     icon: (
       <MaterialCommunityIcons name="school-outline" size={24} color="#ec4899" />
     ),
     color: "bg-pink-100",
+    link: "/notifications",
   },
   {
-    name: "Timesheet",
-    icon: <Ionicons name="time-outline" size={24} color="#10b981" />,
-    color: "bg-emerald-100",
-  },
-  {
-    name: "Library",
+    name: "Available Batches",
     icon: <Ionicons name="library-outline" size={24} color="#f97316" />,
     color: "bg-orange-100",
+    link: "/batches",
   },
   {
     name: "Fee Due",
     icon: <MaterialIcons name="payment" size={24} color="#3b82f6" />,
     color: "bg-blue-100",
+    link: "/students/feeDetails",
   },
   {
-    name: "Organizer",
-    icon: <Feather name="grid" size={24} color="#8b5cf6" />,
+    name: "Profile",
+    icon: <Feather name="user" size={24} color="#8b5cf6" />,
     color: "bg-violet-100",
+    link: "/profile",
   },
 ];
 
 const HomeScreenComponent = () => {
+  const { user } = useUserStore();
+  const filterdList = () => {
+    if (user?.role === "teacher")
+      return quickAccessItems.filter(
+        (item) => item.name !== "Fee Due" && item.name !== "Available Batches"
+      );
+    else return quickAccessItems;
+  };
+  const router = useRouter();
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -90,24 +108,40 @@ const HomeScreenComponent = () => {
               Quick Access
             </Text>
             <View className="flex-row flex-wrap justify-between mt-4">
-              {quickAccessItems.map((item, index) => (
-                <Animated.View
-                  key={index}
-                  className="w-[30%] items-center mb-4"
-                  entering={FadeInUp.duration(500)
-                    .delay(500 + index * 100)
-                    .springify()}
-                >
-                  <TouchableOpacity
-                    className={`w-16 h-16 ${item.color} rounded-2xl items-center justify-center`}
-                  >
-                    {item.icon}
-                  </TouchableOpacity>
-                  <Text className="mt-2 text-xs text-gray-600 font-outfit-medium">
-                    {item.name}
-                  </Text>
-                </Animated.View>
-              ))}
+              {(() => {
+                const filtered = filterdList();
+                return filtered && filtered.length > 0
+                  ? filtered.map((item, index) => (
+                      <Animated.View
+                        key={index}
+                        className="w-[30%] items-center mb-4"
+                        entering={FadeInUp.duration(500)
+                          .delay(500 + index * 100)
+                          .springify()}
+                      >
+                        <TouchableOpacity
+                          className={`w-16 h-16 ${item.color} rounded-2xl items-center justify-center`}
+                          onPress={() =>
+                            router.push({
+                              pathname: item.link as any,
+                              params: {
+                                type:
+                                  item.name === "Available Batches"
+                                    ? "Available"
+                                    : "",
+                              },
+                            })
+                          }
+                        >
+                          {item.icon}
+                        </TouchableOpacity>
+                        <Text className="mt-2 text-xs text-gray-600 font-outfit-medium">
+                          {item.name}
+                        </Text>
+                      </Animated.View>
+                    ))
+                  : null;
+              })()}
             </View>
           </View>
         </Animated.View>

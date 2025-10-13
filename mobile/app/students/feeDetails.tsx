@@ -1,7 +1,7 @@
 import BackHeader from "@/components/shared/BackHeader";
 import { useUserStore } from "@/store/auth.store";
 import { useFeeStore } from "@/store/fee.store";
-import { FeeType } from "@/types";
+import { FeeType, UserType } from "@/types";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import {
@@ -230,12 +230,12 @@ const EmptyFeeState = () => (
 
 // --- Main Screen Component ---
 const FeeDetailsScreen = () => {
-  const { token } = useUserStore();
-  const { FeesList, isLoading, getAllFeeDetailsOfUser } = useFeeStore();
+  const { token, user } = useUserStore();
+  const { FeesList, isLoading, getAllFeeDetailsOfUser, payFee } = useFeeStore();
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    if (token) {
+    if (token && user?.role === "student") {
       getAllFeeDetailsOfUser(token);
     }
   }, [token]);
@@ -248,8 +248,9 @@ const FeeDetailsScreen = () => {
     setRefreshing(false);
   };
 
-  const handlePayFee = (fee: FeeType) => {
+  const handlePayFee = async (fee: FeeType) => {
     // Implement your payment gateway logic here
+    // await payFee(fee._id, token as string, user as UserType);
     Alert.alert(`Redirecting to pay for ${fee.month} fee...`);
   };
 

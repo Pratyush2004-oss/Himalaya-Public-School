@@ -28,8 +28,6 @@ export const useFeeStore = create<FeeStoreInterface>((set, get) => ({
       if (response.status === 400) throw new Error(response.data.message);
       set({ FeesList: response.data.FeesList });
     } catch (error: any) {
-      if (error.isAxiosError) Alert.alert("Error", error.response.data.message);
-      else Alert.alert("Error", error.message);
     } finally {
       set({ isLoading: false });
     }

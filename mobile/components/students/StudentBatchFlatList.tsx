@@ -9,7 +9,11 @@ import StudentBatchList from "./StudentBatchList";
 const Tab = createMaterialTopTabNavigator();
 
 // Main Component
-const StudentBatchFlatList: React.FC = () => {
+type StudentBatchFlatListProps = { type: string | string[] };
+
+const StudentBatchFlatList: React.FC<StudentBatchFlatListProps> = ({
+  type,
+}) => {
   const { token } = useUserStore();
   const { getAllBatches, getBatchListForStudent } = useBatchStore();
 
@@ -45,11 +49,20 @@ const StudentBatchFlatList: React.FC = () => {
             marginHorizontal: 20,
           },
           // This ensures the swipe gesture doesn't interfere with horizontal FlatLists
-          swipeEnabled: true, 
+          swipeEnabled: true,
         }}
       >
-        <Tab.Screen name="My Batches" component={StudentBatchList} />
-        <Tab.Screen name="Available" component={AvailableBatchList} />
+        {type === "Available" ? (
+          <>
+            <Tab.Screen name="Available" component={AvailableBatchList} />
+            <Tab.Screen name="My Batches" component={StudentBatchList} />
+          </>
+        ) : (
+          <>
+            <Tab.Screen name="My Batches" component={StudentBatchList} />
+            <Tab.Screen name="Available" component={AvailableBatchList} />
+          </>
+        )}
       </Tab.Navigator>
     </View>
   );
