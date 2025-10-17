@@ -25,6 +25,8 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
   if (isAuthScreen && user && isAuthenticated) {
     return <Redirect href={"/(tabs)"} />;
+  } else if (!isAuthScreen && !user && !isAuthenticated) {
+    return <Redirect href={"/(auth)"} />;
   } else if (isStudentScreen && user?.role === "teacher") {
     return <Redirect href={"/(tabs)"} />;
   } else if (isTeacherScreen && user?.role === "student") {
