@@ -22,6 +22,15 @@ const userSchema = new mongoose.Schema({
     standard: {
         type: String
     },
+    bus: {
+        use: {
+            type: Boolean,
+            default: false
+        },
+        pickUp: {
+            type: String
+        }
+    },
     UID: {
         type: String,
         required: true
@@ -29,6 +38,18 @@ const userSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
+    },
+    aadharNumber: {
+        type: String,
+        required: true
+    },
+    parents: {
+        name: {
+            type: String,
+        },
+        phone: {
+            type: String,
+        }
     }
 }, {
     timestamps: true
