@@ -19,19 +19,28 @@ const generateUID = (role) => {
 // register controller
 export const registerUser = expressAsyncHandler(async (req, res, next) => {
     try {
-        const { name, standard, email, password, role } = req.body;
+        const { name, standard, email, password, role, aadhar, parentsName, parentsMobile, bus, pickUp } = req.body;
+
+        console.log("bus", bus);
+
+
         // check  for all the fields
-        if (!name || !email || !password || !role) {
+        if (!name || !email || !password || !role || !aadhar || aadhar.length !== 12) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
         // if the role is student and standard is not defined
-        if (role === "student" && !standard) {
-            return res.status(400).json({ message: "Standard is required for students" });
+        if (role === "student" && !standard && !parentsName && !parentsMobile && parentsMobile.length !== 10) {
+            return res.status(400).json({ message: "Standard, aadhar, parentsName, parentsMobile is required for students" });
+        }
+
+        // check if the user use bus or not
+        if (role === "student" && bus && !pickUp) {
+            return res.status(400).json({ message: "PickUp is required for students" });
         }
 
         // check for existing user
-        const existingUser = await UserModel.findOne({ email });
+        const existingUser = await UserModel.findOne({ email, aadharNumber: aadhar });
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         };
@@ -54,7 +63,16 @@ export const registerUser = expressAsyncHandler(async (req, res, next) => {
             password: hashedPassword,
             role,
             UID,
-            isVerified
+            isVerified,
+            aadharNumber: aadhar,
+            parents: {
+                name: parentsName,
+                mobile: parentsMobile
+            },
+            bus: {
+                useBus: bus === true || bus === 'true',
+                pickUp
+            }
         });
 
         res.status(201).json({ message: isVerified ? "User registered successfully" : "User registered successfully, Verify account by admin" });

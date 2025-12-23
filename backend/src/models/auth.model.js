@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     bus: {
-        use: {
+        useBus: {
             type: Boolean,
             default: false
         },
@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema({
     },
     aadharNumber: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     parents: {
         name: {

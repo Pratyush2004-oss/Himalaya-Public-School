@@ -1,4 +1,5 @@
-export const BASE_URL = "https://himalaya-public-school.vercel.app/api";
+export const BASE_URL = "https://dm8gg2rt-5000.inc1.devtunnels.ms/api";
+// export const BASE_URL = "https://himalaya-public-school.vercel.app/api";
 export const RAZORPAY_KEY_ID = "rzp_test_nNCur574VZoFK2";
 
 // user apis
@@ -111,6 +112,21 @@ export const StandardsList = [
     name: "12th",
     value: "12",
   },
+];
+
+export const BusList = [
+  "Pickup1",
+  "Pickup2",
+  "Pickup3",
+  "Pickup4",
+  "Pickup5",
+  "Pickup6",
+  "Pickup7",
+  "Pickup8",
+  "Pickup9",
+  "Pickup10",
+  "Pickup11",
+  "Pickup12",
 ];
 
 export const RoleList = ["student", "teacher"];

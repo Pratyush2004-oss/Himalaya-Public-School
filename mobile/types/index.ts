@@ -15,6 +15,11 @@ export type registerInputType = {
   password: string;
   role: "student" | "teacher" | "";
   standard: string;
+  aadhar: string;
+  parentsName?: string;
+  parentsMobile?: string;
+  bus: boolean;
+  pickUp?: string;
 };
 
 export type loginInputType = {

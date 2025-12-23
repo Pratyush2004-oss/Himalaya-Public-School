@@ -9,6 +9,8 @@ import {
   Platform,
   Pressable,
   ActivityIndicator,
+  ScrollView,
+  Switch,
 } from "react-native";
 import { BlurView } from "expo-blur";
 import Animated, {
@@ -21,32 +23,10 @@ import Animated, {
 import { Svg, Path } from "react-native-svg";
 import { registerInputType } from "@/types";
 import { Picker } from "@react-native-picker/picker";
-import { RoleList, StandardsList } from "@/assets/constants";
+import { BusList, RoleList, StandardsList } from "@/assets/constants";
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useUserStore } from "@/store/auth.store";
-
-// Use react-native-svg for icons in React Native
-const GoogleIcon = () => (
-  <Svg width="24" height="24" viewBox="0 0 48 48">
-    <Path
-      fill="#FFC107"
-      d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
-    ></Path>
-    <Path
-      fill="#FF3D00"
-      d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
-    ></Path>
-    <Path
-      fill="#4CAF50"
-      d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
-    ></Path>
-    <Path
-      fill="#1976D2"
-      d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.088,5.571l6.19,5.238C42.022,35.122,44,30.021,44,24C44,22.659,43.862,21.35,43.611,20.083z"
-    ></Path>
-  </Svg>
-);
 
 // Main component for React Native
 export default function SignupScreen() {
@@ -56,6 +36,11 @@ export default function SignupScreen() {
     password: "",
     role: "",
     standard: "",
+    aadhar: "",
+    parentsName: "",
+    parentsMobile: "",
+    bus: false,
+    pickUp: "",
   });
   const [showPassword, setshowPassword] = useState(false);
   const [isLoading, setisLoading] = useState(false);
@@ -114,6 +99,14 @@ export default function SignupScreen() {
     });
   };
 
+  const handleChangeBus = (e: boolean) => {
+    setinput({
+      ...input,
+      bus: !input.bus,
+      pickUp: e ? "" : input.pickUp,
+    });
+  };
+
   const handleSignup = async () => {
     setisLoading(true);
     try {
@@ -146,86 +139,68 @@ export default function SignupScreen() {
               tint="dark"
               className="p-8 overflow-hidden rounded-3xl"
             >
-              <Text className="mb-2 text-4xl text-center text-white font-outfit-bold ">
-                Himlaya Public School
-              </Text>
-              <Text className="mb-8 text-lg text-center text-gray-300 font-outfit ">
-                Student & Staff Portal
-              </Text>
+              <ScrollView showsVerticalScrollIndicator={false}>
+                <Text className="mb-2 text-4xl text-center text-white font-outfit-bold ">
+                  Himlaya Public School
+                </Text>
+                <Text className="mb-8 text-lg text-center text-gray-300 font-outfit ">
+                  Student & Staff Portal
+                </Text>
 
-              <Animated.View style={formAnimatedStyle}>
-                <View className="flex-row flex-wrap justify-between">
-                  {/* Name */}
-                  <View className="w-full mb-4">
-                    <Text className="mb-2 text-gray-300 font-outfit ">
-                      Full Name
-                    </Text>
-                    <TextInput
-                      placeholderTextColor="#9CA3AF"
-                      placeholder="Enter your full name"
-                      value={input.name}
-                      onChangeText={(e) => setinput({ ...input, name: e })}
-                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
-                    />
-                  </View>
-
-                  {/* Email */}
-                  <View className="w-full mb-4">
-                    <Text className="mb-2 text-gray-300 font-outfit ">
-                      Email
-                    </Text>
-                    <TextInput
-                      placeholder="Enter your email"
-                      autoCapitalize="none"
-                      placeholderTextColor="#9CA3AF"
-                      value={input.email}
-                      onChangeText={(e) => setinput({ ...input, email: e })}
-                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
-                      keyboardType="email-address"
-                    />
-                  </View>
-
-                  {/* Role */}
-                  <View
-                    className={`${input.role === "student" ? "w-[48%]" : "w-full"} mb-4`}
-                  >
-                    <Text className="mb-2 text-gray-300 font-outfit ">
-                      Role
-                    </Text>
-                    <View
-                      className="border border-gray-500 rounded-lg bg-black/30"
-                      style={{ height: 48 }}
-                    >
-                      <Picker
-                        style={{
-                          color: "white",
-                          fontFamily: "Outfit",
-                          height: 48,
-                          marginLeft: 0, // Adjust for proper alignment
-                        }}
-                        selectedValue={input.role}
-                        dropdownIconColor={"white"}
-                        dropdownIconRippleColor={"white"}
-                        onValueChange={(e) => handleChangeRole(e)}
-                      >
-                        <Picker.Item label="Select Role" value="" />
-                        {RoleList.map((item, idx) => (
-                          <Picker.Item
-                            key={idx}
-                            style={{ fontFamily: "Outfit" }}
-                            label={item.toUpperCase()}
-                            value={item}
-                          />
-                        ))}
-                      </Picker>
-                    </View>
-                  </View>
-
-                  {/* Standard */}
-                  {input.role === "student" && (
-                    <View className="w-[48%] mb-4">
+                <Animated.View style={formAnimatedStyle}>
+                  <View className="flex-row flex-wrap justify-between">
+                    {/* Name */}
+                    <View className="w-full mb-4">
                       <Text className="mb-2 text-gray-300 font-outfit ">
-                        Standard
+                        Full Name
+                      </Text>
+                      <TextInput
+                        placeholderTextColor="#9CA3AF"
+                        placeholder="Enter your full name"
+                        value={input.name}
+                        onChangeText={(e) => setinput({ ...input, name: e })}
+                        className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
+                      />
+                    </View>
+
+                    {/* Email */}
+                    <View className="w-full mb-4">
+                      <Text className="mb-2 text-gray-300 font-outfit ">
+                        Email
+                      </Text>
+                      <TextInput
+                        placeholder="Enter your email"
+                        autoCapitalize="none"
+                        placeholderTextColor="#9CA3AF"
+                        value={input.email}
+                        onChangeText={(e) => setinput({ ...input, email: e })}
+                        className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
+                        keyboardType="email-address"
+                      />
+                    </View>
+
+                    {/* AAdhar Number */}
+                    <View className="w-full mb-4">
+                      <Text className="mb-2 text-gray-300 font-outfit ">
+                        Aadhar Number
+                      </Text>
+                      <TextInput
+                        placeholderTextColor="#9CA3AF"
+                        placeholder="Enter your Aadhar Number"
+                        value={input.aadhar}
+                        onChangeText={(e) => setinput({ ...input, aadhar: e })}
+                        className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
+                        keyboardType="numeric"
+                        maxLength={12}
+                      />
+                    </View>
+
+                    {/* Role */}
+                    <View
+                      className={`${input.role === "student" ? "w-[48%]" : "w-full"} mb-4`}
+                    >
+                      <Text className="mb-2 text-gray-300 font-outfit ">
+                        Role
                       </Text>
                       <View
                         className="border border-gray-500 rounded-lg bg-black/30"
@@ -233,96 +208,227 @@ export default function SignupScreen() {
                       >
                         <Picker
                           style={{
-                            fontFamily: "Outfit",
                             color: "white",
+                            fontFamily: "Outfit",
                             height: 48,
                             marginLeft: 0, // Adjust for proper alignment
                           }}
-                          selectedValue={input.standard}
+                          selectedValue={input.role}
                           dropdownIconColor={"white"}
                           dropdownIconRippleColor={"white"}
-                          onValueChange={(e) => handleChangeStandard(e)}
+                          onValueChange={(e) => handleChangeRole(e)}
                         >
-                          <Picker.Item
-                            style={{ fontFamily: "Outfit" }}
-                            label="Select Standard"
-                            value=""
-                          />
-                          {StandardsList.map((item, idx) => (
+                          <Picker.Item label="Select Role" value="" />
+                          {RoleList.map((item, idx) => (
                             <Picker.Item
                               key={idx}
-                              label={item.name}
-                              value={item.value}
+                              style={{ fontFamily: "Outfit" }}
+                              label={item.toUpperCase()}
+                              value={item}
                             />
                           ))}
                         </Picker>
                       </View>
                     </View>
-                  )}
 
-                  {/* Password */}
-                  <View className="relative w-full mb-4">
-                    <Text className="mb-2 text-gray-300 font-outfit ">
-                      Password
-                    </Text>
-                    <TextInput
-                      placeholderTextColor="#9CA3AF"
-                      secureTextEntry={!showPassword}
-                      value={input.password}
-                      onChangeText={(e) => setinput({ ...input, password: e })}
-                      className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
-                      placeholder="Enter your password"
-                    />
-                    <Pressable
-                      className="absolute bottom-3 right-3"
-                      onPress={() => setshowPassword(!showPassword)}
-                    >
-                      <Feather
-                        name={showPassword ? "eye" : "eye-off"}
-                        size={18}
-                        color="white"
+                    {/* Standard */}
+                    {input.role === "student" && (
+                      <View className="w-[48%] mb-4">
+                        <Text className="mb-2 text-gray-300 font-outfit ">
+                          Standard
+                        </Text>
+                        <View
+                          className="border border-gray-500 rounded-lg bg-black/30"
+                          style={{ height: 48 }}
+                        >
+                          <Picker
+                            style={{
+                              fontFamily: "Outfit",
+                              color: "white",
+                              height: 48,
+                              marginLeft: 0, // Adjust for proper alignment
+                            }}
+                            selectedValue={input.standard}
+                            dropdownIconColor={"white"}
+                            dropdownIconRippleColor={"white"}
+                            onValueChange={(e) => handleChangeStandard(e)}
+                          >
+                            <Picker.Item
+                              style={{ fontFamily: "Outfit" }}
+                              label="Select Standard"
+                              value=""
+                            />
+                            {StandardsList.map((item, idx) => (
+                              <Picker.Item
+                                key={idx}
+                                label={item.name}
+                                value={item.value}
+                              />
+                            ))}
+                          </Picker>
+                        </View>
+                      </View>
+                    )}
+
+                    {/* Parents Name */}
+                    {input.role === "student" && (
+                      <View className="w-full mb-4">
+                        <Text className="mb-2 text-gray-300 font-outfit ">
+                          Parents Name
+                        </Text>
+                        <TextInput
+                          placeholderTextColor="#9CA3AF"
+                          placeholder="Enter your parents name"
+                          value={input.parentsName}
+                          onChangeText={(e) =>
+                            setinput({ ...input, parentsName: e })
+                          }
+                          className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
+                        />
+                      </View>
+                    )}
+
+                    {/* Parents Phone Number */}
+                    {input.role === "student" && (
+                      <View className="w-full mb-4">
+                        <Text className="mb-2 text-gray-300 font-outfit ">
+                          Parent's Phone Number
+                        </Text>
+                        <TextInput
+                          placeholderTextColor="#9CA3AF"
+                          placeholder="Enter your phone number"
+                          value={input.parentsMobile}
+                          keyboardType="numeric"
+                          onChangeText={(e) =>
+                            setinput({ ...input, parentsMobile: e })
+                          }
+                          className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
+                        />
+                      </View>
+                    )}
+
+                    {/* choose bus and pickup */}
+                    {input.role === "student" && (
+                      <View className="flex-row items-center justify-between w-full">
+                        <Text className="mb-2 text-xl text-gray-300 font-outfit">
+                          Use Bus?
+                        </Text>
+                        <View className="">
+                          <Switch
+                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                            thumbColor={input.bus ? "#f5dd4d" : "#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={(e) => handleChangeBus(e)}
+                            value={input.bus}
+                          />
+                        </View>
+                      </View>
+                    )}
+                    
+                    {/* choose Pickup location */}
+                    {input.bus && (
+                      <View className="w-full mb-4">
+                        <Text className="mb-2 text-gray-300 font-outfit">
+                          Pick Up Point
+                        </Text>
+                        <View
+                          className="border border-gray-500 rounded-lg bg-black/30"
+                          style={{ height: 48 }}
+                        >
+                          <Picker
+                            style={{
+                              fontFamily: "Outfit",
+                              color: "white",
+                            }}
+                            selectedValue={input.standard}
+                            dropdownIconColor={"white"}
+                            dropdownIconRippleColor={"white"}
+                            onValueChange={(e) =>
+                              setinput({ ...input, pickUp: e })
+                            }
+                          >
+                            <Picker.Item
+                              style={{ fontFamily: "Outfit" }}
+                              label="Select Pickup Point"
+                              value=""
+                            />
+                            {BusList.map((item, idx) => (
+                              <Picker.Item
+                                key={idx}
+                                label={item}
+                                value={item}
+                              />
+                            ))}
+                          </Picker>
+                        </View>
+                      </View>
+                    )}
+
+                    {/* Password */}
+                    <View className="relative w-full mb-4">
+                      <Text className="mb-2 text-gray-300 font-outfit ">
+                        Password
+                      </Text>
+                      <TextInput
+                        placeholderTextColor="#9CA3AF"
+                        secureTextEntry={!showPassword}
+                        value={input.password}
+                        onChangeText={(e) =>
+                          setinput({ ...input, password: e })
+                        }
+                        className="p-3 text-white border border-gray-500 rounded-lg bg-black/30 font-outfit"
+                        placeholder="Enter your password"
                       />
-                    </Pressable>
+                      <Pressable
+                        className="absolute bottom-3 right-3"
+                        onPress={() => setshowPassword(!showPassword)}
+                      >
+                        <Feather
+                          name={showPassword ? "eye" : "eye-off"}
+                          size={18}
+                          color="white"
+                        />
+                      </Pressable>
+                    </View>
                   </View>
+                </Animated.View>
+
+                {/* Signin Button */}
+                <Animated.View style={buttonAnimatedStyle}>
+                  <TouchableOpacity
+                    className="flex-row items-center justify-center p-3 space-x-3 rounded-lg bg-white/90"
+                    onPress={handleSignup}
+                  >
+                    {isLoading ? (
+                      <ActivityIndicator size="small" color="black" />
+                    ) : (
+                      <Text className="text-base font-semibold text-gray-800 font-outfit ">
+                        Regsiter
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                </Animated.View>
+
+                {/* Divider */}
+                <View className="flex-row items-center my-6">
+                  <View className="flex-1 h-px bg-gray-500" />
+                  <Text className="mx-4 text-gray-400 font-outfit ">
+                    or continue with
+                  </Text>
+                  <View className="flex-1 h-px bg-gray-500" />
                 </View>
-              </Animated.View>
 
-              {/* Signin Button */}
-              <Animated.View style={buttonAnimatedStyle}>
-                <TouchableOpacity
-                  className="flex-row items-center justify-center p-3 space-x-3 rounded-lg bg-white/90"
-                  onPress={handleSignup}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator size="small" color="black" />
-                  ) : (
-                    <Text className="text-base font-semibold text-gray-800 font-outfit ">
-                      Regsiter
-                    </Text>
-                  )}
-                </TouchableOpacity>
-              </Animated.View>
-
-              {/* Divider */}
-              <View className="flex-row items-center my-6">
-                <View className="flex-1 h-px bg-gray-500" />
-                <Text className="mx-4 text-gray-400 font-outfit ">
-                  or continue with
+                {/* Login navigator */}
+                <Text className="mt-6 text-center text-gray-400 font-outfit ">
+                  Already have an account?{" "}
+                  <Text
+                    onPress={() => router.replace("/(auth)")}
+                    className="text-xl text-blue-500"
+                  >
+                    Login
+                  </Text>
                 </Text>
-                <View className="flex-1 h-px bg-gray-500" />
-              </View>
-
-              {/* Login navigator */}
-              {/* Signup navigator */}
-              <Text className="mt-6 text-center text-gray-400 font-outfit ">
-                Already have an account?{" "}
-                <Text
-                  onPress={() => router.replace("/(auth)")}
-                  className="text-xl text-blue-500"
-                >
-                  Login
-                </Text>
-              </Text>
+              </ScrollView>
             </BlurView>
           </Animated.View>
         </KeyboardAvoidingView>
