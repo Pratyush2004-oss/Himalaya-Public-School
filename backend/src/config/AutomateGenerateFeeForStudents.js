@@ -38,4 +38,4 @@ const AutomateGenerateFeeForStudents = async () => {
     console.log("Fee generated for students");
 };
 
-export default AutomateGenerateFeeForStudents
+export default AutomateGenerateFeeForStudents;
