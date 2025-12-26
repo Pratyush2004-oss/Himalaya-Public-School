@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import { ENV } from './config/env.js';
 import connectDB from './config/db.js';
-import AutomateGenerateFeeForStudents from './config/AutomateGenerateFeeForStudents.js';
 
 // importing the routes
 import authRoutes from './routes/auth.route.js';
@@ -10,6 +9,7 @@ import assignmentRoutes from './routes/assignment.routes.js';
 import batchRoutes from './routes/batch.route.js';
 import adminRoutes from './routes/admin.routes.js';
 import feeRoutes from './routes/fee.routes.js';
+import startFeeCron from './config/AutomateCron.js';
 
 const app = express();
 
@@ -32,10 +32,11 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: `Error in server : ${err.message}` || "Internal Server Error" })
 });
 
+startFeeCron();
+
 const startServer = async () => {
     try {
         await connectDB();
-        await AutomateGenerateFeeForStudents();
         // listen to local development
         if (ENV.NODE_ENV !== 'production') {
             app.listen(ENV.PORT, () => {
