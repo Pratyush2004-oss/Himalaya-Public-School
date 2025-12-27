@@ -21,9 +21,6 @@ export const registerUser = expressAsyncHandler(async (req, res, next) => {
     try {
         const { name, standard, email, password, role, aadhar, parentsName, parentsMobile, bus, pickUp } = req.body;
 
-        console.log("bus", bus);
-
-
         // check  for all the fields
         if (!name || !email || !password || !role || !aadhar || aadhar.length !== 12) {
             return res.status(400).json({ message: "All fields are required" });
@@ -65,11 +62,11 @@ export const registerUser = expressAsyncHandler(async (req, res, next) => {
             UID,
             isVerified,
             aadharNumber: aadhar,
-            parents: {
+            parents: role === "student" && {
                 name: parentsName,
-                mobile: parentsMobile
+                phone: parentsMobile
             },
-            bus: {
+            bus: role === "student" && bus && {
                 useBus: bus === true || bus === 'true',
                 pickUp
             }
@@ -114,7 +111,10 @@ export const loginUser = expressAsyncHandler(async (req, res, next) => {
             email: user.email,
             role: user.role,
             UID: user.UID,
-            standard: user.standard
+            standard: user.standard,
+            aadharNumber: user.aadharNumber,
+            parents: user.parents,
+            bus: user.bus
         }
 
         // generate the token

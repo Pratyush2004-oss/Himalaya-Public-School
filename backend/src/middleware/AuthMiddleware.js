@@ -33,7 +33,10 @@ export const AuthMiddleware = expressAsyncHandler(async (req, res, next) => {
                 email: user.email,
                 role: user.role,
                 UID: user.UID,
-                standard: user.standard
+                standard: user.standard,
+                aadharNumber: user.aadharNumber,
+                parents: user.parents,
+                bus: user.bus
             };
             next();
         } catch (error) {

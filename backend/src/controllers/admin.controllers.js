@@ -185,7 +185,7 @@ export const createBatch = expressAsyncHandler(async (req, res, next) => {
         const batchJoiningCode = Math.floor(100000 + Math.random() * 900000);
         await BatchModel.create({
             name,
-            teacher: user._id,
+            teacher,
             batchJoiningCode,
             standard
         });
