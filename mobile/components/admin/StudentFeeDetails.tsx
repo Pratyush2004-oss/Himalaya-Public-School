@@ -223,7 +223,7 @@ const StudentInfoCard: React.FC<{ user: AllUsersType }> = ({ user }) => {
       "bg-red-400",
       "bg-indigo-400",
       "bg-pink-400",
-      "bg-teal-400",
+      "bg-yellow-400",
       "bg-orange-400",
       "bg-violet-400",
     ];
@@ -264,18 +264,43 @@ const StudentInfoCard: React.FC<{ user: AllUsersType }> = ({ user }) => {
                 Class: {user.standard ? user.standard : "N/A"}
               </Text>
             </View>
-            <View className="flex-row items-center">
+            <View className="flex-row items-center mb-1">
               <Ionicons name="card-outline" size={16} color="white" />
               <Text className="ml-2 text-sm font-outfit-semibold text-white/90">
                 UID: {user.UID}
               </Text>
             </View>
+            {/* Aadhar Number */}
+            <View className="flex-row items-center mb-1">
+              <Ionicons name="id-card" size={16} color="white" />
+              <Text className="ml-2 text-sm font-outfit-bold text-white/90">
+                Aadhar: {user.aadharNumber}
+              </Text>
+            </View>
+            {/* pickup if exists */}
+            {user.bus?.useBus && (
+              <View className="flex-row items-center">
+                <Ionicons name="home" size={16} color="white" />
+                <Text className="ml-2 text-sm font-outfit-bold text-white/90">
+                  Pickup Stop: {user.bus.pickUp}
+                </Text>
+              </View>
+            )}
+            {/* Parent's contact */}
+            {user.parents?.phone && (
+              <View className="flex-row items-center">
+                <Ionicons name="call" size={16} color="white" />
+                <Text className="ml-2 text-sm font-outfit-bold text-white/90">
+                  Parent's Contact: {user.parents.phone}
+                </Text>
+              </View>
+            )}
           </View>
 
           <View
             className={`px-3 py-1 rounded-full ${
               user.isVerified ? "bg-white/20" : "bg-orange-400/70"
-            } flex-row items-center rounded-2xl`}
+            } flex-row items-center rounded-2xl absolute top-0 right-0`}
           >
             <Feather
               name={user.isVerified ? "check-circle" : "clock"}

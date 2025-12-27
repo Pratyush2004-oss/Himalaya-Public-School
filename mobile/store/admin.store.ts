@@ -87,6 +87,7 @@ export const useAdminStore = create<AdminStoreInterface>((set, get) => ({
           text: "OK",
           onPress: () => {
             get().getAllUsers(token);
+            get().getAllTeachers(token);
           },
         },
       ]);
@@ -262,6 +263,7 @@ export const useAdminStore = create<AdminStoreInterface>((set, get) => ({
     } finally {
     }
   },
+  
   //   fee actions
   verifyFeeStatus: async (feeId, token) => {
     try {

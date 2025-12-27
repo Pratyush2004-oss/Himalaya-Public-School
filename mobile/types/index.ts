@@ -7,6 +7,15 @@ export type UserType = {
   standard: string;
   UID: string;
   _id: string;
+  aadharNumber: string;
+  parents?: {
+    name: string;
+    phone: string;
+  }
+  bus?: {
+    useBus: boolean;
+    pickUp?: string;
+  }
 };
 
 export type registerInputType = {
@@ -96,6 +105,15 @@ export type AllUsersType = {
   UID: string;
   standard: string;
   isVerified: boolean;
+  aadharNumber: string;
+  parents?: {
+    name: string;
+    phone: string;
+  }
+  bus?: {
+    useBus: boolean;
+    pickUp?: string;
+  }
 };
 
 export type CountType = {

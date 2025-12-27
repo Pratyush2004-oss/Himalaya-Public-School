@@ -71,28 +71,69 @@ const ProfileScreen = () => {
               </View>
               {/* Standard only for students */}
               {user?.role === "student" && (
-                <View className="flex-row items-center mb-4">
-                  <View className="items-center justify-center w-12 h-12 rounded-lg bg-indigo-50">
-                    <MaterialCommunityIcons
-                      name="school-outline"
-                      size={24}
-                      color="#6366f1"
-                    />
+                <>
+                  <View className="flex-row items-center mb-4">
+                    <View className="items-center justify-center w-12 h-12 rounded-lg bg-indigo-50">
+                      <MaterialCommunityIcons
+                        name="school-outline"
+                        size={24}
+                        color="#6366f1"
+                      />
+                    </View>
+                    <View className="ml-4">
+                      <Text className="text-xs text-gray-500 font-outfit-medium">
+                        Class
+                      </Text>
+                      <Text className="text-gray-700 font-outfit-semibold">
+                        {user?.standard}
+                      </Text>
+                    </View>
                   </View>
-                  <View className="ml-4">
-                    <Text className="text-xs text-gray-500 font-outfit-medium">
-                      Class
-                    </Text>
-                    <Text className="text-gray-700 font-outfit-semibold">
-                      {user?.standard}
-                    </Text>
+
+                  {/* Pickup address if user have that */}
+                  {user.bus?.useBus && (
+                    <View className="flex-row items-center mb-4">
+                      <View className="items-center justify-center w-12 h-12 bg-blue-100 rounded-lg">
+                        <MaterialCommunityIcons
+                          name="home-account"
+                          size={24}
+                          color="#3b82f6"
+                        />
+                      </View>
+                      <View className="ml-4">
+                        <Text className="text-xs text-gray-500 font-outfit-medium">
+                          Pickup
+                        </Text>
+                        <Text className="text-gray-700 font-outfit-semibold">
+                          {user?.bus?.pickUp}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                  {/* Parents Information */}
+                  <View className="flex-row items-center mb-4">
+                    <View className="items-center justify-center w-12 h-12 rounded-lg bg-yellow-50">
+                      <MaterialCommunityIcons
+                        name="account-child-outline"
+                        size={24}
+                        color="#fbbf24"
+                      />
+                    </View>
+                    <View className="ml-4">
+                      <Text className="text-xs text-gray-500 font-outfit-medium">
+                        Parent's Information
+                      </Text>
+                      <Text className="text-gray-700 font-outfit-semibold">
+                        {user?.parents?.name} - {user?.parents?.phone}
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                </>
               )}
               {/* UID */}
-              <View className="flex-row items-center">
+              <View className="flex-row items-center mb-3">
                 <View className="items-center justify-center w-12 h-12 rounded-lg bg-pink-50">
-                  <Ionicons name="card-outline" size={24} color="#ec4899" />
+                  <Ionicons name="card-outline" size={24} color="#ce4899" />
                 </View>
                 <View className="ml-4">
                   <Text className="text-xs text-gray-500 font-outfit-medium">
@@ -100,6 +141,20 @@ const ProfileScreen = () => {
                   </Text>
                   <Text className="text-gray-700 font-outfit-semibold">
                     {user?.UID}
+                  </Text>
+                </View>
+              </View>
+              {/* Aadhar Number */}
+              <View className="flex-row items-center">
+                <View className="items-center justify-center w-12 h-12 rounded-lg bg-pink-50">
+                  <Ionicons name="id-card" size={24} color="#ec4899" />
+                </View>
+                <View className="ml-4">
+                  <Text className="text-xs text-gray-500 font-outfit-medium">
+                    Aadhar Number
+                  </Text>
+                  <Text className="text-gray-700 font-outfit-semibold">
+                    {user?.aadharNumber}
                   </Text>
                 </View>
               </View>
@@ -133,7 +188,10 @@ const ProfileScreen = () => {
                 </Text>
                 <Feather name="chevron-right" size={20} color="#9ca3af" />
               </TouchableOpacity>
-              <TouchableOpacity className="flex-row items-center justify-between w-full p-4 border-b border-gray-100 active:bg-gray-100" onPress={() => router.push('/notifications')}>
+              <TouchableOpacity
+                className="flex-row items-center justify-between w-full p-4 border-b border-gray-100 active:bg-gray-100"
+                onPress={() => router.push("/notifications")}
+              >
                 <Text className="text-gray-700 font-outfit-medium">
                   Notifications
                 </Text>

@@ -45,14 +45,27 @@ export const useUserStore = create<UserStoreInterface>((set, get) => ({
         !userInput.email ||
         !userInput.password ||
         !userInput.name ||
-        !userInput.role
+        !userInput.role ||
+        !userInput.aadhar
       ) {
         Alert.alert("Error", "Please fill all the fields.");
         return false;
       }
+      // check if aadhar number is valid or not 
+      if (!/^\d{12}$/.test(userInput.aadhar)) {
+        Alert.alert("Error", "Please enter a valid aadhar number.");
+        return false;
+      }
+
       //   check for guardian details for students only
-      if (userInput.role === "student" && !userInput.standard) {
-        Alert.alert("Error", "Please fill standard details.");
+      if (userInput.role === "student" && !userInput.standard && !userInput.parentsMobile && !userInput.parentsName && userInput.parentsMobile?.length !== 10) {
+        Alert.alert("Error", "Please fill all the guardian details and standard properly.");
+        return false;
+      }
+
+      // if bus is choosen then choose the pickup also 
+      if (userInput.bus && !userInput.pickUp) {
+        Alert.alert("Error", "Please fill all the bus details properly.");
         return false;
       }
 
