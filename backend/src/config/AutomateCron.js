@@ -23,7 +23,7 @@ const startFeeCron = () => {
 
     //   automate delete users who are not verified after 10 days
     cron.schedule(
-        "* * * * *",
+        "0 2 * * *",
         async () => {
             try {
                 console.log("[CRON] Delete user generation started");
