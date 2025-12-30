@@ -9,7 +9,7 @@ import assignmentRoutes from './routes/assignment.routes.js';
 import batchRoutes from './routes/batch.route.js';
 import adminRoutes from './routes/admin.routes.js';
 import feeRoutes from './routes/fee.routes.js';
-import startFeeCron from './config/AutomateCron.js';
+import startFeeCron, { runScheduledJobs } from './config/AutomateCron.js';
 
 const app = express();
 
@@ -27,18 +27,29 @@ app.use('/api/batch', batchRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/fee', feeRoutes);
 
+// Endpoint for Vercel Cron to trigger scheduled jobs in a serverless-friendly way
+app.get('/api/cron/run', async (req, res) => {
+    try {
+        await runScheduledJobs();
+        res.json({ status: 'ok' });
+    } catch (error) {
+        console.error('[CRON] Manual trigger failed:', error);
+        res.status(500).json({ message: error.message || 'Cron trigger failed' });
+    }
+});
+
 app.use((err, req, res, next) => {
     console.error("Unhandled error: ", err);
     res.status(500).json({ message: `Error in server : ${err.message}` || "Internal Server Error" })
 });
-
-startFeeCron();
 
 const startServer = async () => {
     try {
         await connectDB();
         // listen to local development
         if (ENV.NODE_ENV !== 'production') {
+            // Keep node-cron only for long-running local dev
+            startFeeCron();
             app.listen(ENV.PORT, () => {
                 console.log(`Server listening on port ${ENV.PORT}`);
             })
