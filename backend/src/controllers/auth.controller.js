@@ -36,8 +36,13 @@ export const registerUser = expressAsyncHandler(async (req, res, next) => {
             return res.status(400).json({ message: "PickUp is required for students" });
         }
 
-        // check for existing user
-        const existingUser = await UserModel.findOne({ email, aadharNumber: aadhar });
+        // check for existing user by email or aadhar number
+        const existingUser = await UserModel.findOne({
+            $or: [
+                { email },
+                { aadharNumber: aadhar }
+            ]
+        });
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });
         };
