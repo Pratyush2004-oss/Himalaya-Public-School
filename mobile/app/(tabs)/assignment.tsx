@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React from "react";
 import TodaysAssignment from "@/components/students/TodaysAssignment";
 import CreateAssignmentScreen from "@/components/teachers/CreateAssignmentScreen";

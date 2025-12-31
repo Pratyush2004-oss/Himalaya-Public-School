@@ -299,6 +299,7 @@ export default function SignupScreen() {
                           placeholder="Enter your phone number"
                           value={input.parentsMobile}
                           keyboardType="numeric"
+                          maxLength={10}
                           onChangeText={(e) =>
                             setinput({ ...input, parentsMobile: e })
                           }
