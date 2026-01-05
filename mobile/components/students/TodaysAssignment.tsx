@@ -30,8 +30,9 @@ const HomeworkFileItem: React.FC<{ fileUrl: string; index: number }> = ({
     .replaceAll("%", "-");
   const fileType = fileUrl.endsWith(".pdf") ? "pdf" : "Image";
 
+  // function that handles download file logic
   const handleDownloadFile = async () => {
-    const destination = new Directory(Paths.cache, "pdfs");
+    const destination = new Directory(Paths.cache, "downloads");
     try {
       await File.downloadFileAsync(fileUrl, destination);
       Alert.alert("Saved", `File saved.`);
@@ -40,6 +41,7 @@ const HomeworkFileItem: React.FC<{ fileUrl: string; index: number }> = ({
     }
   };
 
+  // function that handles view file logic
   const handleViewFile = () => {
     Linking.openURL(fileUrl).catch((err) =>
       Alert.alert("Failed to open URL:", err)
