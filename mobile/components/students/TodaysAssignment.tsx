@@ -30,7 +30,7 @@ const HomeworkFileItem: React.FC<{ fileUrl: string; index: number }> = ({
     .replaceAll("%", "-");
   const fileType = fileUrl.endsWith(".pdf") ? "pdf" : "Image";
 
-  // function that handles download file logic -------- need to update the logic)
+  // function that handles download file logic -------- need to update the logic
   const handleDownloadFile = async () => {
     const destination = new Directory(Paths.cache, "downloads");
     try {
