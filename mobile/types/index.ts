@@ -192,7 +192,6 @@ export type CreateAssignmentInputType = {
 };
 
 // event Type
-
 export type EventType = {
   _id: string;
   title: string;
