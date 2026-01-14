@@ -200,3 +200,4 @@ export type EventType = {
   image: string;
   public: boolean;
 };
+
