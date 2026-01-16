@@ -9,4 +9,4 @@ const EditProfileSection = () => {
   )
 }
 
-export default EditProfileSection
+export default EditProfileSection;
