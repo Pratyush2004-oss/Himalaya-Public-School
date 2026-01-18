@@ -41,6 +41,15 @@ export type ChangePasswordInputType = {
   newPassword: string;
 };
 
+export type UpdateProfileInputType = {
+  name: string;
+  aadhar: string;
+  parentsName?: string;
+  parentsMobile?: string;
+  bus: boolean;
+  pickUp?: string;
+}
+
 // BATCH TYPE
 export type BatchForTeacherType = {
   _id: string;
