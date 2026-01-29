@@ -1,5 +1,5 @@
-export const BASE_URL = "https://dm8gg2rt-5000.inc1.devtunnels.ms/api";
-// export const BASE_URL = "https://himalaya-public-school.vercel.app/api";
+// export const BASE_URL = "https://dm8gg2rt-5000.inc1.devtunnels.ms/api";
+export const BASE_URL = "https://himalaya-public-school.vercel.app/api";
 export const RAZORPAY_KEY_ID = "rzp_test_nNCur574VZoFK2";
 
 // user apis
