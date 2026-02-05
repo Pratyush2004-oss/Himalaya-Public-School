@@ -3,6 +3,7 @@ import {
   EventType,
   loginInputType,
   registerInputType,
+  UpdateProfileInputType,
   UserType,
 } from "@/types";
 import { Alert } from "react-native";
@@ -23,6 +24,7 @@ interface UserStoreInterface {
   login: (userInput: loginInputType) => Promise<void>;
   checkAuth: () => Promise<void>;
   changePassword: (userInput: ChangePasswordInputType) => Promise<void>;
+  updateProfile: (userInput: UpdateProfileInputType) => Promise<void>;
   logout: () => Promise<void>;
   getEventsList: () => Promise<void>;
   resetUserRecord: () => void;
@@ -116,7 +118,7 @@ export const useUserStore = create<UserStoreInterface>((set, get) => ({
 
         if (responseAdmin.status === 400)
           throw new Error(responseAdmin.data.error);
-      } catch (error) {}
+      } catch (error) { }
 
       set({
         isAuthenticated: true,
@@ -169,7 +171,7 @@ export const useUserStore = create<UserStoreInterface>((set, get) => ({
         });
         if (response.status === 400) throw new Error(response.data.message);
         if (requireAdmin.data.isAdmin) set({ isAdmin: true });
-      } catch (error) {}
+      } catch (error) { }
     } catch (error) {
     } finally {
       set({ isCheckingAuth: false });
@@ -178,7 +180,30 @@ export const useUserStore = create<UserStoreInterface>((set, get) => ({
   //   change password
   changePassword: async (userInput) => {
     try {
-    } catch (error) {}
+      if (!(userInput.newPassword && userInput.newPassword)) {
+        Alert.alert("Error", "Please fill all the fields.");
+        return;
+      }
+      // send both new and old password to the backend 
+      const response = await axios.post(UserApis.changePassword, userInput);
+      if (response.status === 400) throw new Error(response.data.message);
+      Alert.alert("Success", response.data.message);
+    } catch (error: any) {
+      if (error.isAxiosError) Alert.alert("Error", error.response.data.message);
+      else Alert.alert("Error", error.message);
+    }
+  },
+  // update profile 
+  updateProfile: async (userInput) => {
+    try {
+      const response = await axios.post(UserApis.updateProfile, userInput);
+      if (response.status === 400) throw new Error(response.data.message);
+      Alert.alert("Success", response.data.message);
+    } catch (error: any) {
+      if (error.isAxiosError) Alert.alert("Error", error.response.data.message);
+      else Alert.alert("Error", error.message);
+    }
+
   },
   //   logout controller
   logout: async () => {
@@ -201,7 +226,7 @@ export const useUserStore = create<UserStoreInterface>((set, get) => ({
       const response = await axios.get(UserApis.getEventsList);
       if (response.status === 400) throw new Error(response.data.message);
       set({ eventsList: response.data.events });
-    } catch (error: any) {}
+    } catch (error: any) { }
   },
   //   reset controller
   resetUserRecord: () => {

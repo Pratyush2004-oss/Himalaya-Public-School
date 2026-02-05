@@ -200,6 +200,31 @@ export const changePassword = expressAsyncHandler(async (req, res, next) => {
     }
 });
 
+// update profile
+export const updateProfile = expressAsyncHandler(async (req, res, next) => {
+    try {
+        const { email, useBus, pickUp, standard, parentsName, parentsPhone } = req.body;
+        const user = req.user;
+        const userToUpdate = await UserModel.findById(user._id);
+        if (!userToUpdate) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        // update the feilds which are not undefined
+        email && (userToUpdate.email = email);
+        useBus && (userToUpdate.bus.useBus = useBus);
+        pickUp && (userToUpdate.bus.pickUp = pickUp);
+        standard && (userToUpdate.standard = standard);
+        parentsName && (userToUpdate.parents.name = parentsName);
+        parentsPhone && (userToUpdate.parents.phone = parentsPhone);
+        await userToUpdate.save();
+        res.status(200).json({ message: "Profile updated successfully" });
+
+    } catch (error) {
+        console.log("Error in update user controller : ", error);
+        next(error);
+    }
+})
+
 // get event list
 export const getEventList = expressAsyncHandler(async (req, res, next) => {
     try {

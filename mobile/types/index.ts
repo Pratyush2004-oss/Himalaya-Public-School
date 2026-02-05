@@ -31,6 +31,8 @@ export type registerInputType = {
   pickUp?: string;
 };
 
+
+
 export type loginInputType = {
   email: string;
   password: string;
@@ -42,11 +44,11 @@ export type ChangePasswordInputType = {
 };
 
 export type UpdateProfileInputType = {
-  name: string;
-  aadhar: string;
+  email: string;
+  standard?: string;
   parentsName?: string;
-  parentsMobile?: string;
-  bus: boolean;
+  parentsPhone?: string;
+  useBus?: boolean;
   pickUp?: string;
 }
 

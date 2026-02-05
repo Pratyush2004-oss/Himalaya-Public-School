@@ -9,6 +9,7 @@ export const UserApis = {
   checkAuth: `${BASE_URL}/auth/check-auth`,
   checkAdmin: `${BASE_URL}/auth/check-admin`,
   changePassword: `${BASE_URL}/auth/change-password`,
+  updateProfile: `${BASE_URL}/auth/update-user-profile`,
   getEventsList: `${BASE_URL}/auth/get-all-events`,
 };
 

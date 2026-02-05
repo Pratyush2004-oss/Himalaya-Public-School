@@ -46,14 +46,16 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
     try {
         await connectDB();
-        // listen to local development
+
+        // Keep node-cron only for long-running local dev
         if (ENV.NODE_ENV !== 'production') {
-            // Keep node-cron only for long-running local dev
             startFeeCron();
-            app.listen(ENV.PORT, () => {
-                console.log(`Server listening on port ${ENV.PORT}`);
-            })
         }
+
+        // Always listen for incoming requests
+        app.listen(ENV.PORT, () => {
+            console.log(`Server listening on port ${ENV.PORT}`);
+        })
     } catch (error) {
         console.log("Failed to start Server:" + error.message);
         process.exit(1);
